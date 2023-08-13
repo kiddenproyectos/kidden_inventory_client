@@ -3,7 +3,7 @@ import { Avatar, ButtonBase } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 // assets
-import { IconMenu2 } from '@tabler/icons';
+import { IconLayoutSidebarLeftCollapse } from '@tabler/icons';
 
 const ToggleButton = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
@@ -16,17 +16,17 @@ const ToggleButton = ({ handleLeftDrawerToggle }) => {
           ...theme.typography.commonAvatar,
           ...theme.typography.mediumAvatar,
           transition: 'all .2s ease-in-out',
-          background: theme.palette.secondary.light,
-          color: theme.palette.secondary.dark,
+          background: 'transparent',
+          color: theme.palette.primary.main,
           '&:hover': {
-            background: theme.palette.secondary.dark,
+            background: theme.palette.primary.main,
             color: theme.palette.secondary.light
           }
         }}
         onClick={handleLeftDrawerToggle}
         color="inherit"
       >
-        <IconMenu2 stroke={1.5} size="1.3rem" />
+        <IconLayoutSidebarLeftCollapse stroke={1.5} size="2rem" />
       </Avatar>
     </ButtonBase>
   );

@@ -73,8 +73,8 @@ const NavItem = ({ item, level }) => {
         mb: 0.5,
         alignItems: 'flex-start',
         backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
-        py: level > 1 ? 1 : 1.25,
-        pl: `${level * 24}px`
+        py: level > 1 ? 1 : 0.8,
+        pl: `${level * 12}px`
       }}
       selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
       onClick={() => itemHandler(item.id)}

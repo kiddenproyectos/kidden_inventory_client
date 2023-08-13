@@ -69,8 +69,8 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             background: theme.palette.background.default,
-            color: theme.palette.text.primary,
-            borderRight: 'none'
+            borderRight: `2px solid ${theme.palette.primary.main}`,
+            color: theme.palette.text.primary
           }
         }}
         ModalProps={{ keepMounted: true }}

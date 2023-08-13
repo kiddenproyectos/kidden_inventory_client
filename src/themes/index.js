@@ -9,7 +9,7 @@ import themePalette from './palette';
 import themeTypography from './typography';
 
 /**
- * Represent theme style and structure as per Material-UI
+ * Repres nt theme style and structure as per Material-UI
  * @param {JsonObject} customization customization parameter object
  */
 
@@ -21,12 +21,12 @@ export const theme = (customization) => {
     heading: color.grey900,
     paper: color.paper,
     backgroundDefault: color.paper,
-    background: color.primaryLight,
+    background: color.grey100,
     darkTextPrimary: color.grey700,
     darkTextSecondary: color.grey500,
     textDark: color.grey900,
-    menuSelected: color.secondaryDark,
-    menuSelectedBack: color.secondaryLight,
+    menuSelected: color.paper,
+    menuSelectedBack: color.primaryMain,
     divider: color.grey200,
     customization
   };

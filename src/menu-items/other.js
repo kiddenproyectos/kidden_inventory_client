@@ -1,9 +1,11 @@
 // assets
 import { IconBrandChrome, IconHelp } from '@tabler/icons';
 
+const Emoji = () => {
+  return <div style={{ fontSize: '18px' }}>📅</div>;
+};
 // constant
-const icons = { IconBrandChrome, IconHelp };
-
+const icons = { IconBrandChrome, IconHelp, Emoji };
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const other = {
@@ -12,10 +14,10 @@ const other = {
   children: [
     {
       id: 'sample-page',
-      title: 'Sample Page',
+      title: 'Calendario',
       type: 'item',
       url: '/sample-page',
-      icon: icons.IconBrandChrome,
+      icon: icons.Emoji,
       breadcrumbs: false
     },
     {
