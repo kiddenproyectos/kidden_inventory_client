@@ -37,7 +37,7 @@ const FirebaseRegister = ({ ...others }) => {
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(true);
-  const [signUpUser] = useUsers();
+  const [{ signUpUser }] = useUsers();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
