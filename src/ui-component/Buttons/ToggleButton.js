@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Avatar, ButtonBase } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -30,6 +31,10 @@ const ToggleButton = ({ handleLeftDrawerToggle }) => {
       </Avatar>
     </ButtonBase>
   );
+};
+
+ToggleButton.propTypes = {
+  handleLeftDrawerToggle: PropTypes.func.isRequired
 };
 
 export default ToggleButton;
