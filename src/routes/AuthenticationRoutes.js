@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { lazy } from 'react';
-import Cookies from 'js-cookie';
-import { Navigate } from 'react-router-dom';
+// import Cookies from 'js-cookie';
+// import { Navigate } from 'react-router-dom';
 
 // project imports
 import Loadable from 'ui-component/Loadable';
@@ -15,12 +15,12 @@ const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/aut
 
 // Componente de verificación de autenticación
 const AuthGuard = ({ children }) => {
-  const token = Cookies.get('userToken');
+  // const token = Cookies.get('userToken');
 
-  // Verifica si el token existe  y solo te deja acceder a la ruta raiz para evitar hacer doble login etc (caso poco comun)
-  if (token) {
-    return <Navigate to="/" />;
-  }
+  // // Verifica si el token existe  y solo te deja acceder a la ruta raiz para evitar hacer doble login etc (caso poco comun)
+  // if (token) {
+  //   return <Navigate to="/" />;
+  // }
   return children;
 };
 

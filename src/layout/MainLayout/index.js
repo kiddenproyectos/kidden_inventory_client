@@ -11,6 +11,7 @@ import Sidebar from './Sidebar';
 import navigation from 'menu-items';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
+import OutsideToogle from './Sidebar/OutsideToogle';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
@@ -67,7 +68,7 @@ const MainLayout = () => {
       <CssBaseline />
       {/* drawer */}
       <Sidebar drawerOpen={!matchDownMd ? leftDrawerOpened : !leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
-
+      <OutsideToogle show={!leftDrawerOpened} handleToggle={handleLeftDrawerToggle} />
       {/* main content */}
       <Main theme={theme} open={leftDrawerOpened}>
         {/* breadcrumb */}
