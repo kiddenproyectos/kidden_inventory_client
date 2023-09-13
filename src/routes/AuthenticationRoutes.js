@@ -1,4 +1,7 @@
+import PropTypes from 'prop-types';
 import { lazy } from 'react';
+import Cookies from 'js-cookie';
+import { Navigate } from 'react-router-dom';
 
 // project imports
 import Loadable from 'ui-component/Loadable';
@@ -10,17 +13,40 @@ const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/aut
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
+// Componente de verificación de autenticación
+const AuthGuard = ({ children }) => {
+  const token = Cookies.get('userToken');
+
+  // Verifica si el token existe  y solo te deja acceder a la ruta raiz para evitar hacer doble login etc (caso poco comun)
+  if (token) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
+AuthGuard.propTypes = {
+  children: PropTypes.node
+};
+
 const AuthenticationRoutes = {
   path: '/',
   element: <MinimalLayout />,
   children: [
     {
-      path: '/pages/login/login3',
-      element: <AuthLogin3 />
+      path: '/login',
+      element: (
+        <AuthGuard>
+          <AuthLogin3 />
+        </AuthGuard>
+      )
     },
     {
-      path: '/pages/register/register3',
-      element: <AuthRegister3 />
+      path: '/register',
+      element: (
+        <AuthGuard>
+          <AuthRegister3 />
+        </AuthGuard>
+      )
     }
   ]
 };
