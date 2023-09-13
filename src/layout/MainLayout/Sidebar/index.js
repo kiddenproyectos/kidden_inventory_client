@@ -34,7 +34,6 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         <PerfectScrollbar
           component="div"
           style={{
-            height: !matchUpMd ? 'calc(100vh - 56px)' : 'calc(100vh - 88px)',
             paddingLeft: '16px',
             paddingRight: '16px'
           }}
@@ -68,8 +67,8 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         sx={{
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            background: theme.palette.background.default,
-            borderRight: `2px solid ${theme.palette.primary.main}`,
+            background: theme.palette.secondary.light,
+            borderRight: `2px solid ${theme.palette.secondary.main}`,
             color: theme.palette.text.primary
           }
         }}

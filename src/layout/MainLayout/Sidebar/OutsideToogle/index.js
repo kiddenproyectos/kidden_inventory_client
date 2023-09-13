@@ -25,7 +25,7 @@ const OutsideToogle = ({ handleToggle, show }) => {
               zIndex: theme.zIndex.speedDial
             }}
           >
-            <IconLayoutSidebarRightExpand />
+            <IconLayoutSidebarRightExpand color="white" size="2rem" />
           </Fab>
         </Tooltip>
       )}

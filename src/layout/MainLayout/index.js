@@ -22,6 +22,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
   borderRadius: 0,
   margin: 0,
   height: '100vh',
+  background: theme.palette.grey['100'],
   transition: theme.transitions.create(
     'margin',
     open
@@ -55,6 +56,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
 
 const MainLayout = () => {
   const theme = useTheme();
+  console.log(theme);
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   // Handle left drawer
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
