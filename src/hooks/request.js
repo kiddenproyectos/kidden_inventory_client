@@ -1,9 +1,9 @@
 // auth requests
 const PROD = process.env.REACT_APP_PROD_API;
 
-// sign up
+// create user
 export const httpPostNewUser = async (data) => {
-  return await fetch(`${PROD}/auth:signUp`, {
+  return await fetch(`${PROD}/administration/user`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
@@ -12,9 +12,9 @@ export const httpPostNewUser = async (data) => {
   });
 };
 
-// sign In
+//  login user
 export const httpSignInUser = async (data) => {
-  const response = await fetch(`${PROD}/auth:signIn`, {
+  const response = await fetch(`${PROD}/auth/login`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'

@@ -1,19 +1,15 @@
+import { useState } from 'react';
 import { httpPostNewUser, httpSignInUser } from './request';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 const useUsers = () => {
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState('');
 
-  const signUpUser = async ({ email, password, confirm_password }) => {
+  const createUser = async ({ nombre, password }) => {
     try {
-      const response = await httpPostNewUser({ email, password, confirm_password });
-      console.log(response);
-      // Verifica el éxito de la creación de usuario según la respuesta (ajusta esto según tu API)
-      if (response?.ok) {
-        // Redirige al usuario a la ruta deseada después del registro exitoso
-        navigate('/login');
-      }
+      const response = await httpPostNewUser({ nombre, password });
       // Puedes agregar manejo de errores aquí si es necesario
       return response;
     } catch (error) {
@@ -22,24 +18,22 @@ const useUsers = () => {
     }
   };
 
-  const signInUser = async ({ email, password }) => {
-    try {
-      const response = await httpSignInUser({ email, password });
+  const signInUser = async ({ nombre, password }) => {
+    const response = await httpSignInUser({ nombre, password });
+    if (response?.token) {
       // get user Token
-      const userToken = response?.data?.token;
+      const userToken = response?.token;
       // store Cookie
-      Cookies.set('userToken', userToken, { expires: 7 });
-      // redirigir al usuario
+      Cookies.set('userToken', userToken, { expires: 30 });
       navigate('/');
-
-      return userToken;
-    } catch (error) {
+    } else {
+      setLoginError(response.error);
       console.error('Error al iniciar sesión:', error);
       throw error;
     }
   };
 
-  return [{ signUpUser, signInUser }];
+  return [{ createUser, signInUser, loginError }];
 };
 
 export default useUsers;
