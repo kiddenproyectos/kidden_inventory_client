@@ -5,11 +5,13 @@
 import users from './users';
 import Inventario from './Inventario';
 import planeacion from './planeacion';
+//redux imports
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [users, Inventario, planeacion]
+  adminItems: [users, Inventario, planeacion],
+  userItems: [Inventario, planeacion]
 };
 
 export default menuItems;
