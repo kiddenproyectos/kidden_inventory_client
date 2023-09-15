@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { httpPostNewUser, httpSignInUser } from './request';
+import { useState, useEffect, useCallback } from 'react';
+import { httpPostNewUser, httpSignInUser, httpGetAllUsers, httpGetNewPasswordForUser } from './request';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch } from 'react-redux';
@@ -10,16 +10,37 @@ const useUsers = () => {
   const [loginError, setLoginError] = useState('');
   const dispatch = useDispatch();
 
-  const createUser = async ({ nombre, password }) => {
-    try {
-      const response = await httpPostNewUser({ nombre, password });
-      // Puedes agregar manejo de errores aquí si es necesario
-      return response;
-    } catch (error) {
-      console.error('Error al registrar usuario:', error);
-      throw error;
-    }
-  };
+  const [users, setUsers] = useState([]);
+
+  const getUsers = useCallback(async () => {
+    const data = await httpGetAllUsers();
+    setUsers(data);
+  }, []);
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+
+  const addUser = useCallback(
+    async (newUserData) => {
+      try {
+        // Realizar la solicitud POST para agregar el nuevo usuario
+        const response = await httpPostNewUser(newUserData);
+        if (response.ok) {
+          // Si la solicitud fue exitosa, actualizar la lista de usuarios
+          getUsers();
+        } else {
+          console.error('Error al agregar el usuario:', response);
+        }
+      } catch (error) {
+        console.error('Error al agregar el usuario:', error);
+      }
+    },
+    [getUsers]
+  );
+  const getPassword = useCallback(async () => {
+    return httpGetNewPasswordForUser();
+  }, []);
 
   const signInUser = async ({ nombre, password }) => {
     const response = await httpSignInUser({ nombre, password });
@@ -39,7 +60,7 @@ const useUsers = () => {
     }
   };
 
-  return [{ createUser, signInUser, loginError }];
+  return [{ users, getPassword, addUser, signInUser, loginError }];
 };
 
 export default useUsers;

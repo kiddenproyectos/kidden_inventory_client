@@ -26,7 +26,7 @@ AuthGuard.propTypes = {
 
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
-
+const UsersPage = Loadable(lazy(() => import('views/users')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -44,6 +44,10 @@ const MainRoutes = {
         {
           path: '/',
           element: <SamplePage />
+        },
+        {
+          path: '/usuarios',
+          element: <UsersPage />
         },
         {
           path: 'sample-page',

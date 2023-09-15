@@ -1,6 +1,11 @@
 // auth requests
 const PROD = process.env.REACT_APP_PROD_API;
 
+export const httpGetAllUsers = async () => {
+  const response = await fetch(`${PROD}/administration/users`);
+  return await response.json();
+};
+
 // create user
 export const httpPostNewUser = async (data) => {
   return await fetch(`${PROD}/administration/user`, {
@@ -22,4 +27,9 @@ export const httpSignInUser = async (data) => {
     body: JSON.stringify(data)
   });
   return response.json();
+};
+
+export const httpGetNewPasswordForUser = async () => {
+  const response = await fetch(`${PROD}/administration/user/password`);
+  return await response.json();
 };
