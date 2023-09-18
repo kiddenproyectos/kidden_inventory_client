@@ -33,3 +33,15 @@ export const httpGetNewPasswordForUser = async () => {
   const response = await fetch(`${PROD}/administration/user/password`);
   return await response.json();
 };
+
+export const httpUploadCsv = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${PROD}/planeacion/archivo`, {
+    method: 'post',
+    body: formData
+  });
+
+  return await response.json();
+};

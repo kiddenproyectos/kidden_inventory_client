@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material/styles';
 const MainTable = ({ rows, columns }) => {
   const theme = useTheme();
   /* eslint-disable */
+
   return (
     <div>
       <DataGrid
