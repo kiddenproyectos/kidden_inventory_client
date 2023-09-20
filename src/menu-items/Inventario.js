@@ -15,7 +15,7 @@ const Inventario = {
       id: 'inventario-item',
       title: 'Inventario',
       type: 'item',
-      url: '/invnetario',
+      url: '/inventario',
       icon: icons.Emoji,
       breadcrumbs: false
     }

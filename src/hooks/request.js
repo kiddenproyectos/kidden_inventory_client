@@ -45,3 +45,23 @@ export const httpUploadCsv = async (file) => {
 
   return await response.json();
 };
+
+// get all products in storage
+
+export const httpGetAllProducts = async () => {
+  const response = await fetch(`${PROD}/inventario/productos`);
+  return await response.json();
+};
+
+// create product
+export const httpPostNewProduct = async (data) => {
+  const response = await fetch(`${PROD}/inventario/nuevo-producto`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  const res = await response.json();
+  return res;
+};

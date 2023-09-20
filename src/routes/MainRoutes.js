@@ -25,10 +25,11 @@ AuthGuard.propTypes = {
 };
 
 // sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 const UsersPage = Loadable(lazy(() => import('views/users')));
 const HomePage = Loadable(lazy(() => import('views/home')));
 const PlaneacionPage = Loadable(lazy(() => import('views/planeacion')));
+const InventarioPage = Loadable(lazy(() => import('views/inventario')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -56,8 +57,8 @@ const MainRoutes = {
           element: <PlaneacionPage />
         },
         {
-          path: 'sample-page',
-          element: <SamplePage />
+          path: '/inventario',
+          element: <InventarioPage />
         }
       ]
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { DataGrid } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
@@ -6,16 +6,21 @@ import { useTheme } from '@mui/material/styles';
 const MainTable = ({ rows, columns }) => {
   const theme = useTheme();
   /* eslint-disable */
+  const [tableRows, setTableRows] = useState(rows);
 
+  useEffect(() => {
+    setTableRows(rows);
+  }, [rows]);
   return (
     <div>
       <DataGrid
         checkboxSelection
-        rows={rows}
+        rows={tableRows}
         columns={columns}
         sx={{
           boxShadow: 2,
           border: 2,
+          background: 'white',
           borderColor: 'primary.light',
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent'
