@@ -4,7 +4,6 @@ import { httpGetAllProducts, httpPostNewProduct, httpDeelteProducts } from './re
 
 const useProducts = () => {
   const reduxProducts = useSelector((state) => state.product);
-
   const dispatch = useDispatch();
 
   const populateReduxProducts = (data) => {
@@ -63,11 +62,29 @@ const useProducts = () => {
     [dispatch, reduxProducts]
   );
 
+  const searchProduct = useCallback(
+    (productNameToSearch) => {
+      const productNameToSearchLowerCase = productNameToSearch.toLowerCase();
+
+      const filteredProducts = reduxProducts.products.filter((producto) => {
+        const nombre = producto.nombre && producto.nombre.S; // Asegúrate de acceder correctamente al nombre
+        // Convierte el nombre del producto a minúsculas y verifica si incluye la cadena de búsqueda en minúsculas
+        return nombre && nombre.toLowerCase().includes(productNameToSearchLowerCase);
+      });
+      dispatch(populateReduxProducts(filteredProducts));
+    },
+    [reduxProducts, dispatch]
+  );
+
+  const restartSearch = useCallback(() => {
+    location.reload();
+  }, []);
+
   useEffect(() => {
     getProducts();
   }, [getProducts]);
 
-  return { productos: reduxProducts, addProduct, deleteProducts };
+  return { productos: reduxProducts, addProduct, deleteProducts, searchProduct, restartSearch };
 };
 
 export default useProducts;

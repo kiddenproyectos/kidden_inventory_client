@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
@@ -13,6 +14,7 @@ import Alert from '@mui/material/Alert';
 import ModalUI from 'ui-component/ModalUI';
 import useProducts from 'hooks/useProducts';
 // utils import
+import { lugaresDeCompra, presentacionDeProductos, estadoProdcuto } from 'utils/productsDataUtils';
 
 const AddProductModal = ({ showModal, closeModal }) => {
   // dropdown options
@@ -58,7 +60,6 @@ const AddProductModal = ({ showModal, closeModal }) => {
       setShowNotification(true);
     });
   };
-
   return (
     <>
       <Modal
@@ -73,21 +74,19 @@ const AddProductModal = ({ showModal, closeModal }) => {
               onChange={(e) => handleInputChange(e)}
               color="secondary"
               id="outlined-basic"
-              label="Nombre"
+              label="Nombre del Artículo"
               variant="outlined"
             />
           </Stack>
-          <Stack spacing={2} mt={2}>
-            <TextField
-              name="presentacion"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Presentacion"
-              variant="outlined"
+          <Stack spacing={2} direction="row" mt={2}>
+            <Autocomplete
+              disablePortal
+              id="combo-box-presentacion"
+              options={presentacionDeProductos}
+              sx={{ width: '60%' }}
+              onChange={(e) => setFormData({ ...formData, presentacion: e.target.outerText.toUpperCase() })}
+              renderInput={(params) => <TextField {...params} label="Presentación" />}
             />
-          </Stack>
-          <Stack spacing={2} mt={2}>
             <TextField
               name="marca"
               onChange={(e) => handleInputChange(e)}
@@ -97,7 +96,7 @@ const AddProductModal = ({ showModal, closeModal }) => {
               variant="outlined"
             />
           </Stack>
-          <Stack spacing={2} mt={2}>
+          <Stack spacing={2} direction="row" mt={2}>
             <TextField
               name="modelo"
               onChange={(e) => handleInputChange(e)}
@@ -106,35 +105,33 @@ const AddProductModal = ({ showModal, closeModal }) => {
               label="Modelo"
               variant="outlined"
             />
-          </Stack>
-          <Stack spacing={2} mt={2}>
-            <TextField
-              name="estado"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Estado"
-              variant="outlined"
-            />
-          </Stack>
-          <Stack spacing={2} mt={2}>
             <TextField
               name="stock"
               onChange={(e) => handleInputChange(e)}
               color="secondary"
               id="outlined-basic"
               label="Stock"
+              type="number"
               variant="outlined"
             />
           </Stack>
           <Stack spacing={2} mt={2}>
-            <TextField
-              name="lugar"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Lugar de compra"
-              variant="outlined"
+            <Autocomplete
+              disablePortal
+              id="combo-box-presentacion"
+              options={estadoProdcuto}
+              onChange={(e) => setFormData({ ...formData, estado: e.target.outerText })}
+              renderInput={(params) => <TextField {...params} label="Estado" />}
+            />
+          </Stack>
+
+          <Stack spacing={2} mt={2}>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={lugaresDeCompra}
+              onChange={(e) => setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() })}
+              renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
             />
           </Stack>
 

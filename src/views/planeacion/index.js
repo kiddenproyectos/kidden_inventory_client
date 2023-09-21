@@ -16,8 +16,6 @@ const Planeacion = () => {
   const [tableData, setTableData] = useState([]);
   const [cubiculo, setCubiculo] = useState('');
 
-  console.log(cubiculo);
-
   const handleFileChange = (e) => {
     httpUploadCsv(e.target.files[0]).then((response) => {
       setTableData(procesarData(response));
