@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { DataGrid } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
 
 const MainTable = ({ rows, columns }) => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   /* eslint-disable */
   const [tableRows, setTableRows] = useState(rows);
@@ -11,12 +13,14 @@ const MainTable = ({ rows, columns }) => {
   useEffect(() => {
     setTableRows(rows);
   }, [rows]);
+
   return (
     <div>
       <DataGrid
         checkboxSelection
         rows={tableRows}
         columns={columns}
+        onRowSelectionModelChange={(data) => dispatch({ type: 'SET_IDS_ROWS', id_rows_array: data })}
         sx={{
           boxShadow: 2,
           border: 2,

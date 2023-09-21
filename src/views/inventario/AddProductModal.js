@@ -146,13 +146,13 @@ const AddProductModal = ({ showModal, closeModal }) => {
         </ModalUI>
       </Modal>
       <Snackbar
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         open={showNotification}
-        message="Usuario Agregado"
+        message="Artículo Agregado"
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         onClose={handleClose}
       >
-        <Alert severity="info">Usuario Agregado</Alert>
+        <Alert severity="info">Artículo Agregado</Alert>
       </Snackbar>
     </>
   );

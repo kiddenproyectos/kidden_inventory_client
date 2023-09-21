@@ -65,3 +65,16 @@ export const httpPostNewProduct = async (data) => {
   const res = await response.json();
   return res;
 };
+
+// delete products
+export const httpDeelteProducts = async (data) => {
+  const response = await fetch(`${PROD}/inventario/eliminar-productos`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ ids: data })
+  });
+  const res = await response.json();
+  return res;
+};

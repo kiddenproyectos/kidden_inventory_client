@@ -6,18 +6,22 @@ import { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 // project imports
 import MainTable from 'ui-component/tables/MainTable';
 import AddProductModal from './AddProductModal';
 // hooks
 import useProducts from 'hooks/useProducts';
+import { useSelector } from 'react-redux';
 
 const Users = () => {
   /* eslint-disable */
-  const { productos } = useProducts();
+  const { productos, deleteProducts } = useProducts();
   const { products } = productos;
-  console.log('componente', products);
+
+  const selectedRows = useSelector((state) => state.product?.id_rows_array);
+
   const columns = [
     { field: 'nombre', headerName: 'Artículo', width: 400 },
     { field: 'presentacion', headerName: 'Presentación', width: 200 },
@@ -47,6 +51,15 @@ const Users = () => {
   return (
     <>
       <Stack spacing={2} direction="row" justifyContent="flex-end" mb={4}>
+        <Button
+          onClick={() => deleteProducts(selectedRows)}
+          disabled={!selectedRows.length > 0}
+          startIcon={<DeleteForeverIcon />}
+          variant="contained"
+          color="error"
+        >
+          Borrar Artículos Seleccionados
+        </Button>
         <Button onClick={onClickAddProductButton} startIcon={<PersonAddIcon />} variant="contained">
           Agregar Artículo
         </Button>

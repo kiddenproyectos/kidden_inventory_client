@@ -1,14 +1,21 @@
 import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { httpGetAllProducts, httpPostNewProduct } from './request';
+import { httpGetAllProducts, httpPostNewProduct, httpDeelteProducts } from './request';
 
 const useProducts = () => {
   const reduxProducts = useSelector((state) => state.product);
+
   const dispatch = useDispatch();
 
   const populateReduxProducts = (data) => {
     return (dispatch) => {
       dispatch({ type: 'SET_PRODUCTS', products: data }); // update user
+    };
+  };
+
+  const emptySelectedRows = (data) => {
+    return (dispatch) => {
+      dispatch({ type: 'SET_IDS_ROWS', id_rows_array: data });
     };
   };
 
@@ -39,11 +46,28 @@ const useProducts = () => {
     [dispatch, reduxProducts]
   );
 
+  const deleteProducts = useCallback(
+    async (products_ids) => {
+      try {
+        const response = await httpDeelteProducts(products_ids);
+        if (response.deletedProducts) {
+          const updatedProducts = reduxProducts.products.filter((product) => !products_ids.includes(product.id.S));
+          dispatch(populateReduxProducts(updatedProducts));
+          // clean selected rows
+          dispatch(emptySelectedRows([]));
+        }
+      } catch (error) {
+        console.error('Error al borrar el producto:', error);
+      }
+    },
+    [dispatch, reduxProducts]
+  );
+
   useEffect(() => {
     getProducts();
   }, [getProducts]);
 
-  return { productos: reduxProducts, addProduct };
+  return { productos: reduxProducts, addProduct, deleteProducts };
 };
 
 export default useProducts;
