@@ -5,7 +5,7 @@ import { useState } from 'react';
 // mui imports
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Switch, TextField } from '@mui/material/';
+import { Switch, TextField, Box } from '@mui/material/';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -13,6 +13,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 // project imports
 import MainTable from 'ui-component/tables/MainTable';
 import AddProductModal from './AddProductModal';
+import ImageModal from './ImageModal';
 // hooks
 import useProducts from 'hooks/useProducts';
 import { useSelector } from 'react-redux';
@@ -27,6 +28,21 @@ const Users = () => {
   const [searchValue, setSearchValue] = useState('');
 
   const columns = [
+    {
+      field: 'image',
+      headerName: 'Foto',
+      width: 200,
+      renderCell: (params) => (
+        <Box
+          sx={{ height: '220px' }}
+          onClick={(event) => {
+            event.stopPropagation(); // Detener la propagación del evento de clic
+          }}
+        >
+          <ImageModal imageLink={params.row.image} />
+        </Box>
+      )
+    },
     { field: 'nombre', headerName: 'Artículo', width: 400 },
     { field: 'presentacion', headerName: 'Presentación', width: 200 },
     { field: 'modelo', headerName: 'Modelo', width: 200 },
@@ -36,8 +52,9 @@ const Users = () => {
       width: 100,
       renderCell: (params) => (
         <>
+          {console.log(params)}
           <Switch
-            checked={params.row.estado === 'Activo '} // Ajusta esto según la lógica de tu estado
+            checked={params.row.estado === 'Activo'} // Ajusta esto según la lógica de tu estado
             onClick={(event) => {
               event.stopPropagation(); // Detener la propagación del evento de clic
             }}
@@ -53,6 +70,7 @@ const Users = () => {
 
   const rows = products.map((items) => ({
     id: items?.id.S,
+    image: items?.imagenes.S,
     nombre: items?.nombre?.S,
     presentacion: items?.presentacion.S,
     marca: items?.marca.S,
@@ -107,7 +125,7 @@ const Users = () => {
         </Stack>
       </Stack>
 
-      <MainTable key={products?.length} rows={rows} columns={columns} />
+      <MainTable key={products?.length} rows={rows} columns={columns} inventario />
       <AddProductModal showModal={modal} closeModal={() => setModal(false)} />
     </>
   );

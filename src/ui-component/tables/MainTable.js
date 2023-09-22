@@ -4,22 +4,23 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
 
-const MainTable = ({ rows, columns }) => {
+const MainTable = ({ rows, columns, inventario }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
+
   /* eslint-disable */
   const [tableRows, setTableRows] = useState(rows);
-
   useEffect(() => {
     setTableRows(rows);
   }, [rows]);
 
   return (
-    <div>
+    <div style={{ maxHeight: '80vh', overflow: 'scroll' }}>
       <DataGrid
         checkboxSelection
         rows={tableRows}
         columns={columns}
+        rowHeight={inventario && 150}
         onRowSelectionModelChange={(data) => dispatch({ type: 'SET_IDS_ROWS', id_rows_array: data })}
         sx={{
           boxShadow: 2,
@@ -46,7 +47,8 @@ const MainTable = ({ rows, columns }) => {
 
 MainTable.propTypes = {
   rows: PropTypes.array,
-  columns: PropTypes.array
+  columns: PropTypes.array,
+  inventario: PropTypes.bool
 };
 
 export default MainTable;

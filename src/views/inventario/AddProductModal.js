@@ -26,9 +26,11 @@ const AddProductModal = ({ showModal, closeModal }) => {
     modelo: '',
     estado: '',
     stock: '',
-    lugar: ''
+    lugar: '',
+    imagen: ''
   });
 
+  console.log(formData);
   const handleChange = (e, setFormData) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -132,6 +134,15 @@ const AddProductModal = ({ showModal, closeModal }) => {
               options={lugaresDeCompra}
               onChange={(e) => setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() })}
               renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
+            />
+            <p>Sube una foto de el artículo</p>
+            <TextField
+              name="image"
+              onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
+              color="secondary"
+              id="outlined-basic"
+              type="file"
+              variant="standard"
             />
           </Stack>
 

@@ -55,17 +55,29 @@ export const httpGetAllProducts = async () => {
 
 // create product
 export const httpPostNewProduct = async (data) => {
+  const formData = new FormData();
+
+  // se tiene que usar formdata por que la iamgen es un archivo
+  // Agrega los datos al FormData
+  formData.append('nombre', data.nombre);
+  formData.append('presentacion', data.presentacion);
+  formData.append('marca', data.marca);
+  formData.append('modelo', data.modelo);
+  formData.append('estado', data.estado);
+  formData.append('stock', data.stock);
+  formData.append('lugar', data.lugar);
+
+  // Agrega la imagen al FormData
+  formData.append('imagen', data.imagen);
+
   const response = await fetch(`${PROD}/inventario/nuevo-producto`, {
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
+    body: formData
   });
+
   const res = await response.json();
   return res;
 };
-
 // delete products
 export const httpDeelteProducts = async (data) => {
   const response = await fetch(`${PROD}/inventario/eliminar-productos`, {
