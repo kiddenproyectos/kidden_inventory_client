@@ -23,10 +23,10 @@ const Planeacion = () => {
   };
 
   const columns = [
-    { field: 'Fecha', headerName: 'Fecha y hora', width: 300 },
-    { field: 'Duracion', headerName: 'Duracion', width: 150 },
-    { field: 'Paciente', headerName: 'Paciente', width: 250 },
-    { field: 'Cubículo', headerName: 'Cubículo' }
+    { field: 'Fecha', headerName: 'Fecha y hora', width: 2 },
+    { field: 'Duracion', headerName: 'Duracion', width: 2 },
+    { field: 'Paciente', headerName: 'Paciente', width: 6 },
+    { field: 'Cubículo', headerName: 'Doctor', width: 2 }
   ];
 
   const rows = tableData.map((Item, i) => ({

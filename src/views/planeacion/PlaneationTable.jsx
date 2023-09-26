@@ -1,5 +1,6 @@
-import React from 'react';
-import { Grid, Box, Typography, Button, Stack } from '@mui/material';
+import React, { useState } from 'react';
+import { Grid, Box, Typography, Button, Stack, TextField } from '@mui/material';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 /* eslint-disable */
 
 const TableColumn = ({ columnTitle, key }) => {
@@ -11,7 +12,10 @@ const TableColumn = ({ columnTitle, key }) => {
     </div>
   );
 };
-const TableRow = ({ rowText, key }) => {
+const TableRow = ({ rowText, key, special, editable }) => {
+  const [showIcon, setShowIcon] = useState(false);
+  const [editableField, setEditableField] = useState(rowText);
+  const [showEditableField, setShowEditableField] = useState(false);
   // Verifica si rowText comienza con las primeras tres letras "NaN"
   if (typeof rowText === 'string' && rowText.startsWith('NaN')) {
     return null; // No muestra nada si comienza con "NaN"
@@ -20,13 +24,56 @@ const TableRow = ({ rowText, key }) => {
   // Divide el texto en líneas utilizando "\n" como separador
   const lines = rowText?.split('\n');
 
-  return (
-    <div key={key}>
+  const onEnterEditablefield = (event) => {
+    if (event.key === 'Enter') {
+      setShowEditableField(false);
+    }
+  };
+  return editable ? (
+    <div key={key} onMouseEnter={() => setShowIcon(true)} onMouseLeave={() => setShowIcon(false)}>
       {rowText && (
-        <Box sx={{ border: '1px solid black', minHeight: '40px' }}>
+        <Box sx={{ border: '1px solid black', minHeight: '60px' }}>
           {/* Mapea cada línea y renderízala en un elemento Typography */}
           {lines.map((line, index) => (
-            <Typography key={index} sx={{ fontSize: '14px', padding: '8px' }}>
+            <Stack
+              direction="row"
+              onClick={() => setShowEditableField(true)}
+              justifyContent="space-between"
+              alignContent="center"
+              alignItems="center"
+              sx={{ cursor: 'pointer' }}
+            >
+              {showEditableField ? (
+                <TextField
+                  onChange={(e) => setEditableField(e.target.value)}
+                  onKeyDown={(e) => onEnterEditablefield(e)}
+                  label="Escribe el nombre del Dr"
+                  variant="standard"
+                  sx={{ marginLeft: '8px' }}
+                />
+              ) : (
+                <>
+                  <Typography
+                    key={index}
+                    sx={{ fontSize: `${special ? '16px' : '14px'}`, padding: '8px', fontWeight: `${special && '700'}` }}
+                  >
+                    {editableField}
+                  </Typography>
+                  {showIcon && <ModeEditIcon />}
+                </>
+              )}
+            </Stack>
+          ))}
+        </Box>
+      )}
+    </div>
+  ) : (
+    <div key={key}>
+      {rowText && (
+        <Box sx={{ border: '1px solid black', minHeight: '60px' }}>
+          {/* Mapea cada línea y renderízala en un elemento Typography */}
+          {lines.map((line, index) => (
+            <Typography key={index} sx={{ fontSize: `${special ? '16px' : '14px'}`, padding: '8px', fontWeight: `${special && '700'}` }}>
               {line}
             </Typography>
           ))}
@@ -66,23 +113,23 @@ const PlaneationTable = ({ columns, rows, cubiculo }) => {
               <TableColumn columnTitle={`Cubiculo ${cubiculo}`} />
             </Grid>
             {columns.map((item) => (
-              <Grid key={item?.headerName} item xs={3}>
+              <Grid key={item?.headerName} item xs={item.width}>
                 <TableColumn columnTitle={item?.headerName} key={item?.headerName} />
               </Grid>
             ))}
             {rows.map((item, i) => (
               <>
-                <Grid key={i} item xs={3}>
-                  <TableRow rowText={item.Fecha} />
+                <Grid key={i} item xs={2}>
+                  <TableRow rowText={item.Fecha} special />
                 </Grid>
-                <Grid key={i + 1} item xs={3}>
+                <Grid key={i + 1} item xs={2}>
                   <TableRow rowText={item?.Duracion} />
                 </Grid>
-                <Grid key={i + 2} item xs={3}>
+                <Grid key={i + 2} item xs={6}>
                   <TableRow rowText={item?.Paciente} />
                 </Grid>
-                <Grid key={i + 3} item xs={3}>
-                  <TableRow rowText={item?.Cubículo} />
+                <Grid key={i + 3} item xs={2}>
+                  <TableRow rowText={item?.Cubículo} editable />
                 </Grid>
                 <Grid key={i + 4} item xs={12}>
                   <TableRow rowText={item?.Descripcion} />
