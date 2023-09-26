@@ -23,7 +23,7 @@ const Planeacion = () => {
   };
 
   const columns = [
-    { field: 'Fecha', headerName: 'Fecha y hora', width: 2 },
+    { field: 'Fecha', headerName: 'Hora', width: 2 },
     { field: 'Duracion', headerName: 'Duracion', width: 2 },
     { field: 'Paciente', headerName: 'Paciente', width: 6 },
     { field: 'Cubículo', headerName: 'Doctor', width: 2 }
@@ -39,7 +39,7 @@ const Planeacion = () => {
   }));
 
   const FirstStep = () => {
-    const numCubiculos = [{ label: '1' }, { label: '2' }, { label: '3' }];
+    const numCubiculos = [{ label: '1' }, { label: '2' }, { label: '3' }, { label: '4' }, { label: '5' }];
     return (
       <Box>
         <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{ width: '100%', height: '90vh' }}>

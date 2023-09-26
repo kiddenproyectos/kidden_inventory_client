@@ -3,10 +3,10 @@ import { Grid, Box, Typography, Button, Stack, TextField } from '@mui/material';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 /* eslint-disable */
 
-const TableColumn = ({ columnTitle, key }) => {
+const TableColumn = ({ columnTitle, key, color }) => {
   return (
     <div key={key}>
-      <Box sx={{ background: 'yellow', border: '1px solid black' }}>
+      <Box sx={{ background: color, border: '1px solid black' }}>
         <Typography sx={{ fontSize: '18px', fontWeight: '600', textAlign: 'center', padding: '8px' }}>{columnTitle}</Typography>
       </Box>
     </div>
@@ -32,7 +32,7 @@ const TableRow = ({ rowText, key, special, editable }) => {
   return editable ? (
     <div key={key} onMouseEnter={() => setShowIcon(true)} onMouseLeave={() => setShowIcon(false)}>
       {rowText && (
-        <Box sx={{ border: '1px solid black', minHeight: '60px' }}>
+        <Box sx={{ border: '1px solid black', minHeight: '40px' }}>
           {/* Mapea cada línea y renderízala en un elemento Typography */}
           {lines.map((line, index) => (
             <Stack
@@ -47,9 +47,10 @@ const TableRow = ({ rowText, key, special, editable }) => {
                 <TextField
                   onChange={(e) => setEditableField(e.target.value)}
                   onKeyDown={(e) => onEnterEditablefield(e)}
-                  label="Escribe el nombre del Dr"
                   variant="standard"
-                  sx={{ marginLeft: '8px' }}
+                  label="Editar"
+                  required
+                  sx={{ marginLeft: '8px', width: '100%' }}
                 />
               ) : (
                 <>
@@ -70,7 +71,7 @@ const TableRow = ({ rowText, key, special, editable }) => {
   ) : (
     <div key={key}>
       {rowText && (
-        <Box sx={{ border: '1px solid black', minHeight: '60px' }}>
+        <Box sx={{ border: '1px solid black', minHeight: '40px' }}>
           {/* Mapea cada línea y renderízala en un elemento Typography */}
           {lines.map((line, index) => (
             <Typography key={index} sx={{ fontSize: `${special ? '16px' : '14px'}`, padding: '8px', fontWeight: `${special && '700'}` }}>
@@ -95,7 +96,13 @@ function printdiv(elem) {
 }
 const PlaneationTable = ({ columns, rows, cubiculo }) => {
   // Función para manejar la impresión
-
+  const colorDeCubiculo = {
+    1: 'yellow',
+    2: 'Chartreuse',
+    3: 'cyan',
+    4: 'pink',
+    5: 'MediumPurple'
+  };
   return (
     <>
       <Stack direction="row" spacing={2}>
@@ -110,11 +117,11 @@ const PlaneationTable = ({ columns, rows, cubiculo }) => {
         <Box sx={{ flexGrow: 1, background: 'white', marginBottom: '8px', marginTop: '16px' }}>
           <Grid container>
             <Grid item xs={12}>
-              <TableColumn columnTitle={`Cubiculo ${cubiculo}`} />
+              <TableColumn columnTitle={`Cubiculo ${cubiculo}`} color={`${colorDeCubiculo[cubiculo]}`} />
             </Grid>
             {columns.map((item) => (
               <Grid key={item?.headerName} item xs={item.width}>
-                <TableColumn columnTitle={item?.headerName} key={item?.headerName} />
+                <TableColumn columnTitle={item?.headerName} key={item?.headerName} color={`${colorDeCubiculo[cubiculo]}`} />
               </Grid>
             ))}
             {rows.map((item, i) => (
@@ -126,7 +133,7 @@ const PlaneationTable = ({ columns, rows, cubiculo }) => {
                   <TableRow rowText={item?.Duracion} />
                 </Grid>
                 <Grid key={i + 2} item xs={6}>
-                  <TableRow rowText={item?.Paciente} />
+                  <TableRow rowText={item?.Paciente} editable special />
                 </Grid>
                 <Grid key={i + 3} item xs={2}>
                   <TableRow rowText={item?.Cubículo} editable />
