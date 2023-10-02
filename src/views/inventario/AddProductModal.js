@@ -30,7 +30,6 @@ const AddProductModal = ({ showModal, closeModal }) => {
     imagen: ''
   });
 
-  console.log(formData);
   const handleChange = (e, setFormData) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({

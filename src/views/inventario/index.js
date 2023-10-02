@@ -1,11 +1,11 @@
 /* eslint-disable */
-
+// react imports
 import { useState } from 'react';
 
 // mui imports
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Switch, TextField, Box } from '@mui/material/';
+import { Switch, TextField, Box, Skeleton } from '@mui/material/';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -20,11 +20,9 @@ import { useSelector } from 'react-redux';
 
 const Users = () => {
   /* eslint-disable */
-  const { productos, deleteProducts, searchProduct, restartSearch } = useProducts();
+  const { productos, deleteProducts, searchProduct, restartSearch, loader } = useProducts();
   const { products } = productos;
-
   const selectedRows = useSelector((state) => state.product?.id_rows_array);
-
   const [searchValue, setSearchValue] = useState('');
 
   const columns = [
@@ -52,7 +50,6 @@ const Users = () => {
       width: 100,
       renderCell: (params) => (
         <>
-          {console.log(params)}
           <Switch
             checked={params.row.estado === 'Activo'} // Ajusta esto según la lógica de tu estado
             onClick={(event) => {
@@ -92,42 +89,55 @@ const Users = () => {
   };
 
   return (
-    <>
-      <Stack spacing={2} direction="row" justifyContent="space-between" mb={4}>
-        <Stack spacing={2} direction="row">
-          <TextField
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            id="input-with-sx"
-            label="Buscar por nombre"
-            variant="standard"
-          />
-          <Button disabled={!searchValue} variant="contained" onClick={() => onClickSearchButton(searchValue)}>
-            Buscar
-          </Button>
-          <Button disabled={!searchValue} variant="contained" onClick={onClickResetButton}>
-            <RestartAltIcon />
-          </Button>
-        </Stack>
-        <Stack spacing={2} direction="row" justifyContent="flex-end" mb={4}>
-          <Button
-            onClick={() => deleteProducts(selectedRows)}
-            disabled={!selectedRows.length > 0}
-            startIcon={<DeleteForeverIcon />}
-            variant="contained"
-            color="error"
-          >
-            Borrar Artículos Seleccionados
-          </Button>
-          <Button onClick={onClickAddProductButton} startIcon={<PersonAddIcon />} variant="contained">
-            Agregar Artículo
-          </Button>
-        </Stack>
-      </Stack>
+    <div>
+      {loader ? (
+        <>
+          <Skeleton variant="rounded" sx={{ marginTop: '8px' }} height={60} />
+          <Skeleton variant="rounded" sx={{ marginTop: '8px' }} height={120} />
+          <Skeleton variant="rounded" sx={{ marginTop: '8px' }} height={40} />
+          <Skeleton variant="rounded" sx={{ marginTop: '8px' }} height={100} />
+          <Skeleton variant="rounded" sx={{ marginTop: '8px' }} height={60} />
+          <Skeleton variant="rounded" sx={{ marginTop: '8px' }} height={100} />
+        </>
+      ) : (
+        <>
+          <Stack spacing={2} direction="row" justifyContent="space-between" mb={4}>
+            <Stack spacing={2} direction="row">
+              <TextField
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                id="input-with-sx"
+                label="Buscar por nombre"
+                variant="standard"
+              />
+              <Button disabled={!searchValue} variant="contained" onClick={() => onClickSearchButton(searchValue)}>
+                Buscar
+              </Button>
+              <Button disabled={!searchValue} variant="contained" onClick={onClickResetButton}>
+                <RestartAltIcon />
+              </Button>
+            </Stack>
+            <Stack spacing={2} direction="row" justifyContent="flex-end" mb={4}>
+              <Button
+                onClick={() => deleteProducts(selectedRows)}
+                disabled={!selectedRows.length > 0}
+                startIcon={<DeleteForeverIcon />}
+                variant="contained"
+                color="error"
+              >
+                Borrar Artículos Seleccionados
+              </Button>
+              <Button onClick={onClickAddProductButton} startIcon={<PersonAddIcon />} variant="contained">
+                Agregar Artículo
+              </Button>
+            </Stack>
+          </Stack>
 
-      <MainTable key={products?.length} rows={rows} columns={columns} inventario />
-      <AddProductModal showModal={modal} closeModal={() => setModal(false)} />
-    </>
+          <MainTable key={products?.length} rows={rows} columns={columns} inventario />
+          <AddProductModal showModal={modal} closeModal={() => setModal(false)} />
+        </>
+      )}
+    </div>
   );
 };
 

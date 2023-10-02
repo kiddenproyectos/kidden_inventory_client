@@ -48,8 +48,8 @@ export const httpUploadCsv = async (file) => {
 
 // get all products in storage
 
-export const httpGetAllProducts = async () => {
-  const response = await fetch(`${PROD}/inventario/productos`);
+export const httpGetAllProducts = async (month) => {
+  const response = await fetch(`${PROD}/inventario/productos/${month}`);
   return await response.json();
 };
 

@@ -1,9 +1,12 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { httpGetAllProducts, httpPostNewProduct, httpDeelteProducts } from './request';
 
 const useProducts = () => {
+  const { month } = useParams();
   const reduxProducts = useSelector((state) => state.product);
+  const [loader, setLoader] = useState(true);
   const dispatch = useDispatch();
 
   const populateReduxProducts = (data) => {
@@ -20,17 +23,19 @@ const useProducts = () => {
 
   const getProducts = useCallback(async () => {
     try {
-      const data = await httpGetAllProducts();
+      const data = await httpGetAllProducts(month);
+      setLoader(false);
       dispatch(populateReduxProducts(data)); // Actualiza el estado de Redux
     } catch (error) {
       console.error('Error al obtener productos:', error);
     }
-  }, [dispatch]);
+  }, [dispatch, month]);
 
   const addProduct = useCallback(
     async (newProductData) => {
       try {
         // Realizar la solicitud POST para agregar el nuevo producto
+
         const response = await httpPostNewProduct(newProductData);
         if (response.productoNuevo) {
           // Actualizar el estado de Redux con los nuevos productos
@@ -84,7 +89,7 @@ const useProducts = () => {
     getProducts();
   }, [getProducts]);
 
-  return { productos: reduxProducts, addProduct, deleteProducts, searchProduct, restartSearch };
+  return { productos: reduxProducts, addProduct, deleteProducts, searchProduct, restartSearch, loader };
 };
 
 export default useProducts;
