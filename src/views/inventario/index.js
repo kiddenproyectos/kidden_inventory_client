@@ -6,14 +6,16 @@ import { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { Switch, TextField, Box, Skeleton } from '@mui/material/';
+// icons
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-
+import InfoIcon from '@mui/icons-material/Info';
 // project imports
 import MainTable from 'ui-component/tables/MainTable';
 import AddProductModal from './AddProductModal';
 import ImageModal from './ImageModal';
+import ProductInfoModal from './ProductInfoModal';
 // hooks
 import useProducts from 'hooks/useProducts';
 import { useSelector } from 'react-redux';
@@ -24,6 +26,13 @@ const Users = () => {
   const { products } = productos;
   const selectedRows = useSelector((state) => state.product?.id_rows_array);
   const [searchValue, setSearchValue] = useState('');
+  const [showProductInfoModal, setShowProductInfoModal] = useState(false);
+  const [infoProducto, setInfoProducto] = useState({});
+
+  const onCloseProductInfoModal = () => {
+    setShowProductInfoModal(false);
+    setInfoProducto({});
+  };
 
   const columns = [
     {
@@ -60,7 +69,25 @@ const Users = () => {
       )
     },
     { field: 'stock', headerName: 'Stock', width: 100 },
-    { field: 'lugar', headerName: 'Lugar', width: 200 }
+    { field: 'lugar', headerName: 'Lugar', width: 200 },
+    { field: 'almacen', headerName: 'Existencia en almacen', width: 250 },
+    {
+      field: 'informacion',
+      headerName: 'Informacion',
+      width: 110,
+      renderCell: (params) => (
+        <Stack direction="row" justifyContent="center">
+          <InfoIcon
+            sx={{ cursor: 'pointer' }}
+            onClick={(event) => {
+              event.stopPropagation();
+              setShowProductInfoModal(true);
+              setInfoProducto(params.row);
+            }}
+          />
+        </Stack>
+      )
+    }
   ];
 
   const [modal, setModal] = useState(false);
@@ -74,7 +101,10 @@ const Users = () => {
     modelo: items?.modelo.S,
     estado: items?.estado.S,
     stock: items?.stock.S,
-    lugar: items?.lugar.S
+    lugar: items?.lugar.S,
+    almacen: items?.almacen.S,
+    entradas: items?.entradas.S,
+    salidas: items?.salidas.S
   }));
   const onClickSearchButton = (value) => {
     searchProduct(value);
@@ -132,9 +162,9 @@ const Users = () => {
               </Button>
             </Stack>
           </Stack>
-
           <MainTable key={products?.length} rows={rows} columns={columns} inventario />
           <AddProductModal showModal={modal} closeModal={() => setModal(false)} />
+          <ProductInfoModal infoProducto={infoProducto} show={showProductInfoModal} close={() => onCloseProductInfoModal()} />
         </>
       )}
     </div>
