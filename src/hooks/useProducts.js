@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { httpGetAllProducts, httpPostNewProduct, httpDeelteProducts } from './request';
+import { httpGetAllProducts, httpPostNewProduct, httpDeelteProducts, httpSumarEntrada, httpRestarSalidas } from './request';
 
 const useProducts = () => {
   const { month } = useParams();
@@ -81,6 +81,63 @@ const useProducts = () => {
     [reduxProducts, dispatch]
   );
 
+  const agregarEntrada = useCallback(
+    async ({ almacen, entradas, id }) => {
+      try {
+        const response = await httpSumarEntrada({ almacen, entradas, id });
+        if (response.productoEditado) {
+          // Clona el array para evitar mutar el estado directamente
+          const updatedInventario = [...reduxProducts.products];
+          // Encuentra el índice del objeto que deseas actualizar
+          const productoIndex = updatedInventario.findIndex((producto) => producto.id.S === response.productoEditado.Attributes.id.S);
+
+          if (productoIndex !== -1) {
+            // Realiza las operaciones en el objeto (por ejemplo, actualizar almacen)
+            updatedInventario[productoIndex] = {
+              ...updatedInventario[productoIndex],
+              almacen: response.productoEditado.Attributes.almacen
+            };
+
+            // Despacha la acción para actualizar el estado en Redux
+            dispatch(populateReduxProducts(updatedInventario));
+          }
+        }
+        return response;
+      } catch (error) {
+        console.error('Error al editar el producto:', error);
+      }
+    },
+    [dispatch, reduxProducts]
+  );
+
+  const restarSalida = useCallback(
+    async ({ almacen, salidas, id }) => {
+      try {
+        const response = await httpRestarSalidas({ almacen, salidas, id });
+        if (response.productoEditado) {
+          // Clona el array para evitar mutar el estado directamente
+          const updatedInventario = [...reduxProducts.products];
+          // Encuentra el índice del objeto que deseas actualizar
+          const productoIndex = updatedInventario.findIndex((producto) => producto.id.S === response.productoEditado.Attributes.id.S);
+
+          if (productoIndex !== -1) {
+            // Realiza las operaciones en el objeto (por ejemplo, actualizar almacen)
+            updatedInventario[productoIndex] = {
+              ...updatedInventario[productoIndex],
+              almacen: response.productoEditado.Attributes.almacen
+            };
+
+            // Despacha la acción para actualizar el estado en Redux
+            dispatch(populateReduxProducts(updatedInventario));
+          }
+        }
+        return response;
+      } catch (error) {
+        console.error('Error al editar el producto:', error);
+      }
+    },
+    [dispatch, reduxProducts]
+  );
   const restartSearch = useCallback(() => {
     location.reload();
   }, []);
@@ -89,7 +146,7 @@ const useProducts = () => {
     getProducts();
   }, [getProducts]);
 
-  return { productos: reduxProducts, addProduct, deleteProducts, searchProduct, restartSearch, loader };
+  return { productos: reduxProducts, addProduct, deleteProducts, searchProduct, restartSearch, loader, agregarEntrada, restarSalida };
 };
 
 export default useProducts;

@@ -90,3 +90,29 @@ export const httpDeelteProducts = async (data) => {
   const res = await response.json();
   return res;
 };
+
+// sumar entradas
+export const httpSumarEntrada = async ({ almacen, entradas, id }) => {
+  console.log({ almacen, entradas, id });
+  const response = await fetch(`${PROD}/inventario/sumar-entrada/${id}`, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ almacen, entradas })
+  });
+  const res = await response.json();
+  return res;
+};
+// restar salidas
+export const httpRestarSalidas = async ({ almacen, salidas, id }) => {
+  const response = await fetch(`${PROD}/inventario/restar-salida/${id}`, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ almacen, salidas })
+  });
+  const res = await response.json();
+  return res;
+};

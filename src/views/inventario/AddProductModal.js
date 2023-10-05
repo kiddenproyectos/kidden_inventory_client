@@ -27,7 +27,8 @@ const AddProductModal = ({ showModal, closeModal }) => {
     estado: '',
     stock: '',
     lugar: '',
-    imagen: ''
+    imagen: '',
+    almacen: ''
   });
 
   const handleChange = (e, setFormData) => {
@@ -116,13 +117,23 @@ const AddProductModal = ({ showModal, closeModal }) => {
               variant="outlined"
             />
           </Stack>
-          <Stack spacing={2} mt={2}>
+          <Stack spacing={2} direction="row" mt={2}>
             <Autocomplete
               disablePortal
               id="combo-box-presentacion"
+              sx={{ width: '60%' }}
               options={estadoProdcuto}
               onChange={(e) => setFormData({ ...formData, estado: e.target.outerText })}
               renderInput={(params) => <TextField {...params} label="Estado" />}
+            />
+            <TextField
+              name="almacen"
+              onChange={(e) => handleInputChange(e)}
+              color="secondary"
+              id="outlined-basic"
+              label="Almacen"
+              type="number"
+              variant="outlined"
             />
           </Stack>
 

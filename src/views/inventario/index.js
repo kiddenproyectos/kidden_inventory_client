@@ -1,6 +1,6 @@
 /* eslint-disable */
 // react imports
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // mui imports
 import Stack from '@mui/material/Stack';
@@ -25,14 +25,38 @@ const Users = () => {
   const { productos, deleteProducts, searchProduct, restartSearch, loader } = useProducts();
   const { products } = productos;
   const selectedRows = useSelector((state) => state.product?.id_rows_array);
+  const [tableRows, setTableRows] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [showProductInfoModal, setShowProductInfoModal] = useState(false);
   const [infoProducto, setInfoProducto] = useState({});
+  const [idModal, setIdModal] = useState('');
+
+  useEffect(() => {
+    setTableRows(products);
+  }, [products]);
 
   const onCloseProductInfoModal = () => {
     setShowProductInfoModal(false);
     setInfoProducto({});
   };
+
+  // actualizar live el estado del modla cuando cambien los productos
+
+  const serachObjectInArray = (array, id) => {
+    const arrayCopy = [...array];
+    const productIndex = arrayCopy.findIndex((producto) => producto?.id.S === id);
+    const object = array[productIndex];
+    return object;
+  };
+  const onClickColumnInfo = (id) => {
+    setIdModal(id);
+    const updatedProducts = serachObjectInArray(products, id);
+    setInfoProducto(updatedProducts);
+  };
+  useEffect(() => {
+    const updatedProducts = serachObjectInArray(products, idModal);
+    setInfoProducto(updatedProducts);
+  }, [products]);
 
   const columns = [
     {
@@ -82,7 +106,7 @@ const Users = () => {
             onClick={(event) => {
               event.stopPropagation();
               setShowProductInfoModal(true);
-              setInfoProducto(params.row);
+              onClickColumnInfo(params.row.id);
             }}
           />
         </Stack>
@@ -92,7 +116,7 @@ const Users = () => {
 
   const [modal, setModal] = useState(false);
 
-  const rows = products.map((items) => ({
+  const rows = tableRows.map((items) => ({
     id: items?.id.S,
     image: items?.imagenes.S,
     nombre: items?.nombre?.S,
@@ -106,6 +130,7 @@ const Users = () => {
     entradas: items?.entradas.S,
     salidas: items?.salidas.S
   }));
+
   const onClickSearchButton = (value) => {
     searchProduct(value);
   };
