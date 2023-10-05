@@ -40,8 +40,10 @@ const useProducts = () => {
         if (response.productoNuevo) {
           // Actualizar el estado de Redux con los nuevos productos
           dispatch(populateReduxProducts([...reduxProducts.products, response.productoNuevo]));
+          return response;
         } else {
-          console.error('Error al agregar el producto:', response);
+          console.log('Error al agregar el producto:', response);
+          return response;
         }
       } catch (error) {
         console.error('Error al agregar el producto:', error);

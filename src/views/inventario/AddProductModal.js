@@ -43,7 +43,8 @@ const AddProductModal = ({ showModal, closeModal }) => {
     handleChange(e, setFormData);
   };
 
-  const [showNotification, setShowNotification] = useState(false);
+  const [showNotificationSuccess, setShowNotificationSuccess] = useState(false);
+  const [showNotificationError, setShowNotificationError] = useState(false);
 
   const { addProduct } = useProducts();
 
@@ -52,14 +53,20 @@ const AddProductModal = ({ showModal, closeModal }) => {
       return;
     }
 
-    setShowNotification(false);
+    setShowNotificationSuccess(false);
+    setShowNotificationError(false);
   };
 
   const onSubmitModal = () => {
     // promise linked to the result of adding data
-    return addProduct(formData).then(() => {
-      closeModal();
-      setShowNotification(true);
+    return addProduct(formData).then((response) => {
+      if (response.error) {
+        setShowNotificationError(true);
+      } else {
+        closeModal();
+        setShowNotificationSuccess(true);
+        setFormData({ nombre: '', presentacion: '', marca: '', modelo: '', estado: '', stock: '', lugar: '', imagen: '', almacen: '' });
+      }
     });
   };
   return (
@@ -70,107 +77,122 @@ const AddProductModal = ({ showModal, closeModal }) => {
         // aria-describedby="modal-modal-description"
       >
         <ModalUI title={'Agregar Artículo'} closeModal={closeModal}>
-          <Stack spacing={2} mt={2}>
-            <TextField
-              name="nombre"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Nombre del Artículo"
-              variant="outlined"
-            />
-          </Stack>
-          <Stack spacing={2} direction="row" mt={2}>
-            <Autocomplete
-              disablePortal
-              id="combo-box-presentacion"
-              options={presentacionDeProductos}
-              sx={{ width: '60%' }}
-              onChange={(e) => setFormData({ ...formData, presentacion: e.target.outerText.toUpperCase() })}
-              renderInput={(params) => <TextField {...params} label="Presentación" />}
-            />
-            <TextField
-              name="marca"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Marca"
-              variant="outlined"
-            />
-          </Stack>
-          <Stack spacing={2} direction="row" mt={2}>
-            <TextField
-              name="modelo"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Modelo"
-              variant="outlined"
-            />
-            <TextField
-              name="stock"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Stock"
-              type="number"
-              variant="outlined"
-            />
-          </Stack>
-          <Stack spacing={2} direction="row" mt={2}>
-            <Autocomplete
-              disablePortal
-              id="combo-box-presentacion"
-              sx={{ width: '60%' }}
-              options={estadoProdcuto}
-              onChange={(e) => setFormData({ ...formData, estado: e.target.outerText })}
-              renderInput={(params) => <TextField {...params} label="Estado" />}
-            />
-            <TextField
-              name="almacen"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              label="Almacen"
-              type="number"
-              variant="outlined"
-            />
-          </Stack>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <Stack spacing={2} mt={2}>
+              <TextField
+                required
+                name="nombre"
+                onChange={(e) => handleInputChange(e)}
+                color="secondary"
+                id="outlined-basic"
+                label="Nombre del Artículo"
+                variant="outlined"
+              />
+            </Stack>
+            <Stack spacing={2} direction="row" mt={2}>
+              <Autocomplete
+                disablePortal
+                id="combo-box-presentacion"
+                options={presentacionDeProductos}
+                sx={{ width: '60%' }}
+                onChange={(e) => setFormData({ ...formData, presentacion: e.target.outerText.toUpperCase() })}
+                renderInput={(params) => <TextField {...params} label="Presentación" />}
+              />
+              <TextField
+                name="marca"
+                required
+                onChange={(e) => handleInputChange(e)}
+                color="secondary"
+                id="outlined-basic"
+                label="Marca"
+                variant="outlined"
+              />
+            </Stack>
+            <Stack spacing={2} direction="row" mt={2}>
+              <TextField
+                name="modelo"
+                onChange={(e) => handleInputChange(e)}
+                color="secondary"
+                id="outlined-basic"
+                label="Modelo"
+                variant="outlined"
+              />
+              <TextField
+                name="stock"
+                required
+                onChange={(e) => handleInputChange(e)}
+                color="secondary"
+                id="outlined-basic"
+                label="Stock"
+                type="number"
+                variant="outlined"
+              />
+            </Stack>
+            <Stack spacing={2} direction="row" mt={2}>
+              <Autocomplete
+                disablePortal
+                id="combo-box-presentacion"
+                sx={{ width: '60%' }}
+                options={estadoProdcuto}
+                onChange={(e) => setFormData({ ...formData, estado: e.target.outerText })}
+                renderInput={(params) => <TextField {...params} label="Estado" />}
+              />
+              <TextField
+                name="almacen"
+                required
+                onChange={(e) => handleInputChange(e)}
+                color="secondary"
+                id="outlined-basic"
+                label="Almacen"
+                type="number"
+                variant="outlined"
+              />
+            </Stack>
 
-          <Stack spacing={2} mt={2}>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={lugaresDeCompra}
-              onChange={(e) => setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() })}
-              renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
-            />
-            <p>Sube una foto de el artículo</p>
-            <TextField
-              name="image"
-              onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
-              color="secondary"
-              id="outlined-basic"
-              type="file"
-              variant="standard"
-            />
-          </Stack>
+            <Stack spacing={2} mt={2}>
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={lugaresDeCompra}
+                onChange={(e) => setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() })}
+                renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
+              />
+              <p>Sube una foto de el artículo</p>
+              <TextField
+                name="image"
+                onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
+                color="secondary"
+                id="outlined-basic"
+                type="file"
+                variant="standard"
+              />
+            </Stack>
 
-          <Stack mt={2}>
-            <Button onClick={onSubmitModal} size="medium" variant="contained">
-              Agregar
-            </Button>
-          </Stack>
+            <Stack mt={2}>
+              <Button type="submit" onClick={onSubmitModal} size="medium" variant="contained">
+                Agregar
+              </Button>
+            </Stack>
+          </form>
         </ModalUI>
       </Modal>
       <Snackbar
         autoHideDuration={2000}
-        open={showNotification}
+        open={showNotificationSuccess}
         message="Artículo Agregado"
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         onClose={handleClose}
       >
         <Alert severity="info">Artículo Agregado</Alert>
+      </Snackbar>
+      <Snackbar
+        autoHideDuration={2000}
+        open={showNotificationError}
+        message="Artículo Agregado"
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        onClose={handleClose}
+      >
+        <Alert severity="error">Error al agregar articulo</Alert>
       </Snackbar>
     </>
   );
