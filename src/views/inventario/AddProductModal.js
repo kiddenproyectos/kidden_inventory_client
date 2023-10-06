@@ -28,7 +28,8 @@ const AddProductModal = ({ showModal, closeModal }) => {
     stock: '',
     lugar: '',
     imagen: '',
-    almacen: ''
+    almacen: '',
+    minima: ''
   });
 
   const handleChange = (e, setFormData) => {
@@ -148,25 +149,35 @@ const AddProductModal = ({ showModal, closeModal }) => {
                 variant="outlined"
               />
             </Stack>
-
-            <Stack spacing={2} mt={2}>
+            <Stack spacing={2} direction="row" mt={2}>
               <Autocomplete
+                sx={{ width: '60%' }}
                 disablePortal
                 id="combo-box-demo"
                 options={lugaresDeCompra}
                 onChange={(e) => setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() })}
                 renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
               />
-              <p>Sube una foto de el artículo</p>
               <TextField
-                name="image"
-                onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
+                name="minima"
+                required
+                onChange={(e) => handleInputChange(e)}
                 color="secondary"
                 id="outlined-basic"
-                type="file"
-                variant="standard"
+                label="Cantidad Mínima"
+                type="number"
+                variant="outlined"
               />
             </Stack>
+            <p>Sube una foto de el artículo</p>
+            <TextField
+              name="image"
+              onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
+              color="secondary"
+              id="outlined-basic"
+              type="file"
+              variant="standard"
+            />
 
             <Stack mt={2}>
               <Button type="submit" onClick={onSubmitModal} size="medium" variant="contained">

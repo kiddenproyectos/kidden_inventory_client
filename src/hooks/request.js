@@ -56,7 +56,6 @@ export const httpGetAllProducts = async (month) => {
 // create product
 export const httpPostNewProduct = async (data) => {
   const formData = new FormData();
-
   // se tiene que usar formdata por que la iamgen es un archivo
   // Agrega los datos al FormData
   formData.append('nombre', data.nombre);
@@ -66,6 +65,8 @@ export const httpPostNewProduct = async (data) => {
   formData.append('estado', data.estado);
   formData.append('stock', data.stock);
   formData.append('lugar', data.lugar);
+  formData.append('almacen', data.almacen);
+  formData.append('minima', data.minima);
 
   // Agrega la imagen al FormData
   formData.append('imagen', data.imagen);
@@ -105,13 +106,14 @@ export const httpSumarEntrada = async ({ almacen, entradas, id }) => {
   return res;
 };
 // restar salidas
-export const httpRestarSalidas = async ({ almacen, salidas, id }) => {
+export const httpRestarSalidas = async ({ almacen, salidas, minima, nombre, id }) => {
+  console.log({ almacen, salidas, minima, nombre, id });
   const response = await fetch(`${PROD}/inventario/restar-salida/${id}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ almacen, salidas })
+    body: JSON.stringify({ almacen, salidas, minima, nombre })
   });
   const res = await response.json();
   return res;

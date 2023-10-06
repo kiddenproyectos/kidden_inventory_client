@@ -36,7 +36,7 @@ const ProductInfoModal = ({ show, close, infoProducto }) => {
     setEntradas(0);
   };
   const onRestarSalidasButtonClick = () => {
-    restarSalida({ almacen, salidas, id: infoProducto?.id?.S });
+    restarSalida({ almacen, salidas, minima: infoProducto?.minima?.S, nombre: infoProducto?.nombre?.S, id: infoProducto?.id?.S });
     setSalidas(0);
   };
 
@@ -50,16 +50,15 @@ const ProductInfoModal = ({ show, close, infoProducto }) => {
         }}
         title="Info del Artículo"
       >
-        <Stack>
-          <p>
-            <b>Artículo: {infoProducto?.nombre?.S}</b>
-          </p>
-        </Stack>
-        <Stack>
-          <p>
-            <b>Existencia en almacen: {almacen}</b>
-          </p>
-        </Stack>
+        <p>
+          <b>Artículo: {infoProducto?.nombre?.S}</b>
+        </p>
+        <p>
+          <b>Existencia en almacen: {almacen}</b>
+        </p>
+        <p>
+          <b>Cantidad minima: {infoProducto?.minima?.S}</b>
+        </p>
         <Stack direction="row" justifyContent="space-between" my={2}>
           <TextField
             sx={{ width: '80%' }}

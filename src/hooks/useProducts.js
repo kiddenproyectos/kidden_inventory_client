@@ -113,9 +113,10 @@ const useProducts = () => {
   );
 
   const restarSalida = useCallback(
-    async ({ almacen, salidas, id }) => {
+    async ({ almacen, salidas, minima, nombre, id }) => {
+      console.log(almacen, salidas, minima, nombre, id);
       try {
-        const response = await httpRestarSalidas({ almacen, salidas, id });
+        const response = await httpRestarSalidas({ almacen, salidas, minima, nombre, id });
         if (response.productoEditado) {
           // Clona el array para evitar mutar el estado directamente
           const updatedInventario = [...reduxProducts.products];
