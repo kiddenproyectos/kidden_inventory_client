@@ -48,8 +48,13 @@ export const httpUploadCsv = async (file) => {
 
 // get all products in storage
 
-export const httpGetAllProducts = async (month) => {
+export const httpGetAllProductsPerMonth = async (month) => {
   const response = await fetch(`${PROD}/inventario/productos/${month}`);
+  return await response.json();
+};
+
+export const httpGetAllProducts = async () => {
+  const response = await fetch(`${PROD}/inventario/productos`);
   return await response.json();
 };
 
@@ -105,6 +110,7 @@ export const httpSumarEntrada = async ({ almacen, entradas, id }) => {
   const res = await response.json();
   return res;
 };
+
 // restar salidas
 export const httpRestarSalidas = async ({ almacen, salidas, minima, nombre, id }) => {
   console.log({ almacen, salidas, minima, nombre, id });
@@ -117,4 +123,24 @@ export const httpRestarSalidas = async ({ almacen, salidas, minima, nombre, id }
   });
   const res = await response.json();
   return res;
+};
+
+export const httpGetAllEntradas = async () => {
+  const response = await fetch(`${PROD}/inventario/producto/entradas`);
+  return await response.json();
+};
+
+export const httpGetEntradaPorProducto = async (nombre) => {
+  const response = await fetch(`${PROD}/inventario/producto/entradas/${nombre}`);
+  return await response.json();
+};
+
+export const httpGetAllSalidas = async () => {
+  const response = await fetch(`${PROD}/inventario/producto/salidas`);
+  return await response.json();
+};
+
+export const httpGetSalidaPorProducto = async (nombre) => {
+  const response = await fetch(`${PROD}/inventario/producto/salidas/${nombre}`);
+  return await response.json();
 };

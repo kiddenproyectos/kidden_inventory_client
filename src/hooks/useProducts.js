@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { httpGetAllProducts, httpPostNewProduct, httpDeelteProducts, httpSumarEntrada, httpRestarSalidas } from './request';
+import { httpGetAllProductsPerMonth, httpPostNewProduct, httpDeelteProducts, httpSumarEntrada, httpRestarSalidas } from './request';
 
 const useProducts = () => {
   const { month } = useParams();
@@ -21,9 +21,9 @@ const useProducts = () => {
     };
   };
 
-  const getProducts = useCallback(async () => {
+  const getProductsPerMonth = useCallback(async () => {
     try {
-      const data = await httpGetAllProducts(month);
+      const data = await httpGetAllProductsPerMonth(month);
       setLoader(false);
       dispatch(populateReduxProducts(data)); // Actualiza el estado de Redux
     } catch (error) {
@@ -114,7 +114,6 @@ const useProducts = () => {
 
   const restarSalida = useCallback(
     async ({ almacen, salidas, minima, nombre, id }) => {
-      console.log(almacen, salidas, minima, nombre, id);
       try {
         const response = await httpRestarSalidas({ almacen, salidas, minima, nombre, id });
         if (response.productoEditado) {
@@ -141,13 +140,14 @@ const useProducts = () => {
     },
     [dispatch, reduxProducts]
   );
+
   const restartSearch = useCallback(() => {
     location.reload();
   }, []);
 
   useEffect(() => {
-    getProducts();
-  }, [getProducts]);
+    getProductsPerMonth();
+  }, [getProductsPerMonth]);
 
   return { productos: reduxProducts, addProduct, deleteProducts, searchProduct, restartSearch, loader, agregarEntrada, restarSalida };
 };

@@ -1,16 +1,17 @@
 /* eslint-disable */
 // react imports
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // mui imports
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import { Switch, TextField, Box, Skeleton } from '@mui/material/';
+
+import { Switch, TextField, Box, Skeleton, Tooltip, Stack, Button } from '@mui/material/';
 // icons
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import InfoIcon from '@mui/icons-material/Info';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 // project imports
 import MainTable from 'ui-component/tables/MainTable';
 import AddProductModal from './AddProductModal';
@@ -30,6 +31,7 @@ const Users = () => {
   const [showProductInfoModal, setShowProductInfoModal] = useState(false);
   const [infoProducto, setInfoProducto] = useState({});
   const [idModal, setIdModal] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTableRows(products);
@@ -74,7 +76,28 @@ const Users = () => {
         </Box>
       )
     },
-    { field: 'nombre', headerName: 'Artículo', width: 400 },
+    {
+      field: 'nombre',
+      headerName: 'Artículo',
+      width: 400,
+      renderCell: (params) => (
+        <Stack
+          sx={{ cursor: 'pointer', width: '100%' }}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          onClick={(event) => {
+            event.stopPropagation();
+            navigate(`/articulo/${params.row.nombre}`);
+          }}
+        >
+          <p style={{ fontSize: '16px', fontWeight: '500' }}>{params.row.nombre}</p>
+          <Tooltip title="Entradas y Salidas" placement="top">
+            <OpenInNewIcon />
+          </Tooltip>
+        </Stack>
+      )
+    },
     { field: 'presentacion', headerName: 'Presentación', width: 200 },
     { field: 'modelo', headerName: 'Modelo', width: 200 },
     {

@@ -30,7 +30,8 @@ const HomePage = Loadable(lazy(() => import('views/home')));
 const PlaneacionPage = Loadable(lazy(() => import('views/planeacion')));
 const InventarioPageOrganizer = Loadable(lazy(() => import('views/inventario/Organizer')));
 const InventroyYearPage = Loadable(lazy(() => import('views/inventario')));
-
+const ArticlePage = Loadable(lazy(() => import('views/inventario/EntradasSalidas')));
+const ProductsPage = Loadable(lazy(() => import('views/inventario/Products')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -65,6 +66,14 @@ const MainRoutes = {
         {
           path: '/inventario/:year/:month',
           element: <InventroyYearPage />
+        },
+        {
+          path: '/articulo/:nombre',
+          element: <ArticlePage />
+        },
+        {
+          path: '/articulos',
+          element: <ProductsPage />
         }
       ]
     }
