@@ -74,7 +74,7 @@ const TableRow = ({ rowText, key, special, editable }) => {
         <Box sx={{ border: '1px solid black', minHeight: '40px' }}>
           {/* Mapea cada línea y renderízala en un elemento Typography */}
           {lines.map((line, index) => (
-            <Typography key={index} sx={{ fontSize: `${special ? '16px' : '14px'}`, padding: '8px', fontWeight: `${special && '700'}` }}>
+            <Typography key={index} sx={{ fontSize: `${special ? '16px' : '14px'}`, padding: '2px', fontWeight: `${special && '700'}` }}>
               {line}
             </Typography>
           ))}

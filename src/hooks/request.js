@@ -98,14 +98,14 @@ export const httpDeelteProducts = async (data) => {
 };
 
 // sumar entradas
-export const httpSumarEntrada = async ({ almacen, entradas, id }) => {
+export const httpSumarEntrada = async ({ almacen, entradas, id, nombre }) => {
   console.log({ almacen, entradas, id });
   const response = await fetch(`${PROD}/inventario/sumar-entrada/${id}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ almacen, entradas })
+    body: JSON.stringify({ almacen, entradas: entradas.toString(), nombre })
   });
   const res = await response.json();
   return res;
@@ -119,7 +119,7 @@ export const httpRestarSalidas = async ({ almacen, salidas, minima, nombre, id }
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ almacen, salidas, minima, nombre })
+    body: JSON.stringify({ almacen, salidas: salidas.toString(), minima, nombre })
   });
   const res = await response.json();
   return res;

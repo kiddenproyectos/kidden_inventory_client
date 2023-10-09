@@ -32,7 +32,7 @@ const ProductInfoModal = ({ show, close, infoProducto }) => {
   }, [infoProducto]);
 
   const onAddEntradaButtonClick = () => {
-    agregarEntrada({ almacen, entradas, id: infoProducto?.id?.S });
+    agregarEntrada({ almacen, entradas, id: infoProducto?.id?.S, nombre: infoProducto?.nombre?.S });
     setEntradas(0);
   };
   const onRestarSalidasButtonClick = () => {
@@ -48,16 +48,16 @@ const ProductInfoModal = ({ show, close, infoProducto }) => {
           setEntradas(0);
           setSalidas(0);
         }}
-        title="Info del Artículo"
+        title={infoProducto?.nombre?.S}
       >
-        <p>
-          <b>Artículo: {infoProducto?.nombre?.S}</b>
-        </p>
         <p>
           <b>Existencia en almacen: {almacen}</b>
         </p>
         <p>
           <b>Cantidad minima: {infoProducto?.minima?.S}</b>
+        </p>
+        <p>
+          <b>Stock: {infoProducto?.stock?.S}</b>
         </p>
         <Stack direction="row" justifyContent="space-between" my={2}>
           <TextField

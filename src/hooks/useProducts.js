@@ -1,11 +1,24 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { httpGetAllProductsPerMonth, httpPostNewProduct, httpDeelteProducts, httpSumarEntrada, httpRestarSalidas } from './request';
+import {
+  httpGetAllProductsPerMonth,
+  httpPostNewProduct,
+  httpDeelteProducts,
+  httpSumarEntrada,
+  httpRestarSalidas,
+  httpGetAllProducts,
+  httpGetEntradaPorProducto,
+  httpGetSalidaPorProducto
+} from './request';
 
 const useProducts = () => {
-  const { month } = useParams();
+  const { nombre, month } = useParams();
   const reduxProducts = useSelector((state) => state.product);
+  const [allProducts, setAllProducts] = useState([]);
+  const [entradasDeProducto, setEntradasDeProducto] = useState([]);
+  const [salidasDeProducto, setSalidasDeProducto] = useState([]);
+
   const [loader, setLoader] = useState(true);
   const dispatch = useDispatch();
 
@@ -20,6 +33,15 @@ const useProducts = () => {
       dispatch({ type: 'SET_IDS_ROWS', id_rows_array: data });
     };
   };
+
+  const getAllProducts = useCallback(async () => {
+    try {
+      const data = await httpGetAllProducts();
+      setAllProducts(data);
+    } catch (error) {
+      console.error('Error al obtener productos:', error);
+    }
+  }, []);
 
   const getProductsPerMonth = useCallback(async () => {
     try {
@@ -84,9 +106,9 @@ const useProducts = () => {
   );
 
   const agregarEntrada = useCallback(
-    async ({ almacen, entradas, id }) => {
+    async ({ almacen, entradas, id, nombre }) => {
       try {
-        const response = await httpSumarEntrada({ almacen, entradas, id });
+        const response = await httpSumarEntrada({ almacen, entradas, id, nombre });
         if (response.productoEditado) {
           // Clona el array para evitar mutar el estado directamente
           const updatedInventario = [...reduxProducts.products];
@@ -141,15 +163,55 @@ const useProducts = () => {
     [dispatch, reduxProducts]
   );
 
+  const entradasPorProducto = useCallback(async (nombre) => {
+    try {
+      const response = await httpGetEntradaPorProducto(nombre);
+      setEntradasDeProducto(response);
+      console.log(response);
+    } catch (error) {
+      console.error('Error al traer entradas de producto:', error);
+    }
+  }, []);
+
+  const salidasPorProducto = useCallback(async (nombre) => {
+    try {
+      const response = await httpGetSalidaPorProducto(nombre);
+      setSalidasDeProducto(response);
+      console.log(response);
+    } catch (error) {
+      console.error('Error al traer entradas de producto:', error);
+    }
+  }, []);
+
   const restartSearch = useCallback(() => {
     location.reload();
   }, []);
 
   useEffect(() => {
-    getProductsPerMonth();
-  }, [getProductsPerMonth]);
+    if (month) {
+      getProductsPerMonth();
+    } else if (nombre) {
+      entradasPorProducto(nombre);
+      // .then(() => salidasPorProducto(nombre));
+      salidasPorProducto(nombre);
+    } else {
+      getAllProducts();
+    }
+  }, [getProductsPerMonth, month, getAllProducts, entradasPorProducto, nombre, salidasPorProducto]);
 
-  return { productos: reduxProducts, addProduct, deleteProducts, searchProduct, restartSearch, loader, agregarEntrada, restarSalida };
+  return {
+    productos: reduxProducts,
+    allProducts,
+    addProduct,
+    deleteProducts,
+    searchProduct,
+    restartSearch,
+    loader,
+    agregarEntrada,
+    restarSalida,
+    entradasDeProducto,
+    salidasDeProducto
+  };
 };
 
 export default useProducts;
