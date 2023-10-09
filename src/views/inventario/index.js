@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 // mui imports
 
-import { Switch, TextField, Box, Skeleton, Tooltip, Stack, Button } from '@mui/material/';
+import { TextField, Box, Skeleton, Tooltip, Stack, Button } from '@mui/material/';
 // icons
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -23,13 +23,14 @@ import { useSelector } from 'react-redux';
 
 const Users = () => {
   /* eslint-disable */
-  const { productos, deleteProducts, searchProduct, restartSearch, loader } = useProducts();
+  const { productos, deleteProducts, searchProduct, restartSearch, loader, editExistingProductPicture } = useProducts();
   const { products } = productos;
   const selectedRows = useSelector((state) => state.product?.id_rows_array);
   const [tableRows, setTableRows] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [showProductInfoModal, setShowProductInfoModal] = useState(false);
   const [infoProducto, setInfoProducto] = useState({});
+  const [showEditButton, setShowEditButton] = useState(false);
   const [idModal, setIdModal] = useState('');
   const navigate = useNavigate();
 
@@ -67,12 +68,23 @@ const Users = () => {
       width: 200,
       renderCell: (params) => (
         <Box
-          sx={{ height: '220px' }}
+          sx={{ height: '220px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+          onMouseEnter={() => setShowEditButton(true)}
           onClick={(event) => {
             event.stopPropagation(); // Detener la propagación del evento de clic
           }}
         >
           <ImageModal imageLink={params.row.image} />
+
+          <Button>
+            Cambiar
+            <input
+              onChange={(e) => editExistingProductPicture({ nombre: params.row.nombre, imagen: e.target.files[0], id: params.row.id })}
+              type="file"
+              accept="image/*"
+              style={{ width: '100%', position: 'absolute', top: 0, left: 0, opacity: 0 }}
+            />
+          </Button>
         </Box>
       )
     },
@@ -103,17 +115,7 @@ const Users = () => {
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 100,
-      renderCell: (params) => (
-        <>
-          <Switch
-            checked={params.row.estado === 'Activo'} // Ajusta esto según la lógica de tu estado
-            onClick={(event) => {
-              event.stopPropagation(); // Detener la propagación del evento de clic
-            }}
-          />
-        </>
-      )
+      width: 100
     },
     { field: 'stock', headerName: 'Stock', width: 100 },
     { field: 'lugar', headerName: 'Lugar', width: 200 },

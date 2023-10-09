@@ -9,7 +9,8 @@ import {
   httpRestarSalidas,
   httpGetAllProducts,
   httpGetEntradaPorProducto,
-  httpGetSalidaPorProducto
+  httpGetSalidaPorProducto,
+  httpPutProductPicture
 } from './request';
 
 const useProducts = () => {
@@ -69,6 +70,37 @@ const useProducts = () => {
         }
       } catch (error) {
         console.error('Error al agregar el producto:', error);
+      }
+    },
+    [dispatch, reduxProducts]
+  );
+
+  const editExistingProductPicture = useCallback(
+    async (data) => {
+      try {
+        const response = await httpPutProductPicture(data);
+        if (response.productoEditado) {
+          // Clona el array para evitar mutar el estado directamente
+          const updatedInventario = [...reduxProducts.products];
+          // Encuentra el índice del objeto que deseas actualizar
+          const productoIndex = updatedInventario.findIndex((producto) => producto.id.S === response.productoEditado.Attributes.id.S);
+
+          if (productoIndex !== -1) {
+            // Realiza las operaciones en el objeto (por ejemplo, actualizar almacen)
+            updatedInventario[productoIndex] = {
+              ...updatedInventario[productoIndex],
+              imagenes: response.productoEditado.Attributes.imagenes
+            };
+
+            // Despacha la acción para actualizar el estado en Redux
+            dispatch(populateReduxProducts(updatedInventario));
+          }
+        } else {
+          console.log('error al editar foto');
+        }
+        return response;
+      } catch (error) {
+        console.log(error);
       }
     },
     [dispatch, reduxProducts]
@@ -210,7 +242,8 @@ const useProducts = () => {
     agregarEntrada,
     restarSalida,
     entradasDeProducto,
-    salidasDeProducto
+    salidasDeProducto,
+    editExistingProductPicture
   };
 };
 

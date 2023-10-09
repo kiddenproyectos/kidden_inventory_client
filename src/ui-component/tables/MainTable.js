@@ -20,7 +20,7 @@ const MainTable = ({ rows, columns, inventario }) => {
         checkboxSelection
         rows={tableRows}
         columns={columns}
-        rowHeight={inventario && 150}
+        rowHeight={inventario && 200}
         onRowSelectionModelChange={(data) => dispatch({ type: 'SET_IDS_ROWS', id_rows_array: data })}
         sx={{
           boxShadow: 2,

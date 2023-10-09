@@ -84,6 +84,24 @@ export const httpPostNewProduct = async (data) => {
   const res = await response.json();
   return res;
 };
+
+// edit  picture
+export const httpPutProductPicture = async (data) => {
+  const formData = new FormData();
+  // se tiene que usar formdata por que la imagen es un archivo
+  // Agrega los datos al FormData
+  formData.append('nombre', data.nombre);
+  // Agrega la imagen al FormData
+  formData.append('imagen', data.imagen);
+
+  const response = await fetch(`${PROD}/inventario/producto/editar-foto/${data.id}`, {
+    method: 'put',
+    body: formData
+  });
+
+  const res = await response.json();
+  return res;
+};
 // delete products
 export const httpDeelteProducts = async (data) => {
   const response = await fetch(`${PROD}/inventario/eliminar-productos`, {
