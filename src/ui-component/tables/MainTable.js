@@ -15,7 +15,7 @@ const MainTable = ({ rows, columns, inventario }) => {
   }, [rows]);
 
   return (
-    <div style={{ maxHeight: '80vh', overflow: 'hidden' }}>
+    <div style={{ maxHeight: '80vh', overflow: 'scroll' }}>
       <DataGrid
         checkboxSelection
         rows={tableRows}

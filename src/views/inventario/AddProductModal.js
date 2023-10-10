@@ -1,4 +1,5 @@
 import { useState } from 'react';
+/* eslint-disable */
 
 // mui import
 import Modal from '@mui/material/Modal';
@@ -12,11 +13,10 @@ import Alert from '@mui/material/Alert';
 
 // project import
 import ModalUI from 'ui-component/ModalUI';
-import useProducts from 'hooks/useProducts';
 // utils import
 import { lugaresDeCompra, presentacionDeProductos, estadoProdcuto } from 'utils/productsDataUtils';
 
-const AddProductModal = ({ showModal, closeModal }) => {
+const AddProductModal = ({ addProduct, showModal, closeModal }) => {
   // dropdown options
 
   const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ const AddProductModal = ({ showModal, closeModal }) => {
   const [showNotificationSuccess, setShowNotificationSuccess] = useState(false);
   const [showNotificationError, setShowNotificationError] = useState(false);
 
-  const { addProduct } = useProducts();
+  // const { addProduct } = useProducts();
 
   const handleClose = (reason) => {
     if (reason === 'clickaway') {

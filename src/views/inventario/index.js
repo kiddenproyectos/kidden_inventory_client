@@ -23,7 +23,17 @@ import { useSelector } from 'react-redux';
 
 const Users = () => {
   /* eslint-disable */
-  const { productos, deleteProducts, searchProduct, restartSearch, loader, editExistingProductPicture } = useProducts();
+  const {
+    productos,
+    deleteProducts,
+    searchProduct,
+    restartSearch,
+    loader,
+    editExistingProductPicture,
+    addProduct,
+    agregarEntrada,
+    restarSalida
+  } = useProducts();
   const { products } = productos;
   const selectedRows = useSelector((state) => state.product?.id_rows_array);
   const [tableRows, setTableRows] = useState([]);
@@ -79,7 +89,7 @@ const Users = () => {
           <Button>
             Cambiar
             <input
-              onChange={(e) => editExistingProductPicture({ nombre: params.row.nombre, imagen: e.target.files[0], id: params.row.id })}
+              onChange={(e) => editExistingProductPicture({ nombre: params.row.nombre, imagen: e.target.files[0] })}
               type="file"
               accept="image/*"
               style={{ width: '100%', position: 'absolute', top: 0, left: 0, opacity: 0 }}
@@ -215,8 +225,14 @@ const Users = () => {
             </Stack>
           </Stack>
           <MainTable key={products?.length} rows={rows} columns={columns} inventario />
-          <AddProductModal showModal={modal} closeModal={() => setModal(false)} />
-          <ProductInfoModal infoProducto={infoProducto} show={showProductInfoModal} close={() => onCloseProductInfoModal()} />
+          <AddProductModal addProduct={addProduct} showModal={modal} closeModal={() => setModal(false)} />
+          <ProductInfoModal
+            agregarEntrada={agregarEntrada}
+            restarSalida={restarSalida}
+            infoProducto={infoProducto}
+            show={showProductInfoModal}
+            close={() => onCloseProductInfoModal()}
+          />
         </>
       )}
     </div>

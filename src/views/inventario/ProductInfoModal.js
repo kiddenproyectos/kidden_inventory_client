@@ -8,11 +8,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 // project imports
 import ModalUI from 'ui-component/ModalUI';
-// project hooks
-import useProducts from 'hooks/useProducts';
 
-const ProductInfoModal = ({ show, close, infoProducto }) => {
-  const { agregarEntrada, restarSalida } = useProducts();
+const ProductInfoModal = ({ show, close, infoProducto, agregarEntrada, restarSalida }) => {
   const [almacen, setAlmacen] = useState(infoProducto?.almacen?.S);
 
   const [entradas, setEntradas] = useState(0);

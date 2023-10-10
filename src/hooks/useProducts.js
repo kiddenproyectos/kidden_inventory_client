@@ -44,15 +44,18 @@ const useProducts = () => {
     }
   }, []);
 
-  const getProductsPerMonth = useCallback(async () => {
-    try {
-      const data = await httpGetAllProductsPerMonth(month);
-      setLoader(false);
-      dispatch(populateReduxProducts(data)); // Actualiza el estado de Redux
-    } catch (error) {
-      console.error('Error al obtener productos:', error);
-    }
-  }, [dispatch, month]);
+  const getProductsPerMonth = useCallback(
+    async (month) => {
+      try {
+        const data = await httpGetAllProductsPerMonth(month);
+        setLoader(false);
+        dispatch(populateReduxProducts(data)); // Actualiza el estado de Redux
+      } catch (error) {
+        console.error('Error al obtener productos:', error);
+      }
+    },
+    [dispatch]
+  );
 
   const addProduct = useCallback(
     async (newProductData) => {
@@ -221,7 +224,7 @@ const useProducts = () => {
 
   useEffect(() => {
     if (month) {
-      getProductsPerMonth();
+      getProductsPerMonth(month);
     } else if (nombre) {
       entradasPorProducto(nombre);
       // .then(() => salidasPorProducto(nombre));

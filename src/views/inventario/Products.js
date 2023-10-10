@@ -13,7 +13,6 @@ import { fixDateForProductTable, mesesDelAnio } from 'views/utilities/OrganizerD
 const Products = () => {
   const { allProducts } = useProducts();
   const navigate = useNavigate();
-  console.log(allProducts);
 
   const columns = [
     {
