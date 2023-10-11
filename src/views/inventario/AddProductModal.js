@@ -97,7 +97,7 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
                 options={presentacionDeProductos}
                 sx={{ width: '60%' }}
                 onChange={(e) => setFormData({ ...formData, presentacion: e.target.outerText.toUpperCase() })}
-                renderInput={(params) => <TextField {...params} label="Presentación" />}
+                renderInput={(params) => <TextField {...params} label="Paquete" />}
               />
               <TextField
                 name="marca"
@@ -144,7 +144,7 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
                 onChange={(e) => handleInputChange(e)}
                 color="secondary"
                 id="outlined-basic"
-                label="Almacen"
+                label="Existencia"
                 type="number"
                 variant="outlined"
               />

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Button, Box, Stack, Autocomplete, TextField } from '@mui/material';
 // project imports
 import MainTable from 'ui-component/tables/MainTable';
+import ImageModal from './ImageModal';
 // project hooks
 import useProducts from 'hooks/useProducts';
 // utils
@@ -27,6 +28,32 @@ const PrintMaterialList = () => {
 
   const columns = [
     { field: 'nombre', headerName: 'Artículo', width: 300 },
+    {
+      field: 'image',
+      headerName: 'Foto',
+      width: 200,
+      renderCell: (params) => (
+        <Box
+          sx={{ height: '220px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+          onMouseEnter={() => setShowEditButton(true)}
+          onClick={(event) => {
+            event.stopPropagation(); // Detener la propagación del evento de clic
+          }}
+        >
+          <ImageModal imageLink={params.row.image} />
+
+          <Button>
+            Cambiar
+            <input
+              onChange={(e) => editExistingProductPicture({ nombre: params.row.nombre, imagen: e.target.files[0] })}
+              type="file"
+              accept="image/*"
+              style={{ width: '100%', position: 'absolute', top: 0, left: 0, opacity: 0 }}
+            />
+          </Button>
+        </Box>
+      )
+    },
     {
       field: 'cantidad',
       headerName: 'Cantidad',
@@ -51,6 +78,7 @@ const PrintMaterialList = () => {
   const rows = filteredProducts.map((items) => ({
     id: items?.id?.S,
     nombre: items?.nombre?.S,
+    image: items?.imagenes.S,
     presentacion: items?.presentacion?.S,
     marca: items?.marca?.S,
     modelo: items?.modelo?.S,
@@ -132,7 +160,7 @@ const PrintMaterialList = () => {
             <div id="printable_div_id">
               {logo && <Logo />}
               <h2>{lugar}</h2>
-              <MainTable rows={rows} columns={columns} />
+              <MainTable print inventario rows={rows} columns={columns} />
             </div>
           </>
         )}
