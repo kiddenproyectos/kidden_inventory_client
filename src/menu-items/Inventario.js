@@ -6,8 +6,11 @@ const Emoji = () => {
 const EmojiTodos = () => {
   return <div style={{ fontSize: '18px' }}>📊</div>;
 };
+const EmojiListas = () => {
+  return <div style={{ fontSize: '18px' }}>🖨</div>;
+};
 // constant
-const icons = { Emoji, EmojiTodos };
+const icons = { Emoji, EmojiTodos, EmojiListas };
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const Inventario = {
@@ -28,6 +31,14 @@ const Inventario = {
       type: 'item',
       url: '/articulos',
       icon: icons.EmojiTodos,
+      breadcrumbs: false
+    },
+    {
+      id: 'material-list-item',
+      title: 'Imprimir lista de material',
+      type: 'item',
+      url: '/imprimir-lista',
+      icon: icons.EmojiListas,
       breadcrumbs: false
     }
   ]

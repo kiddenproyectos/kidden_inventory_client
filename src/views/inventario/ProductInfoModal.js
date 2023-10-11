@@ -48,7 +48,7 @@ const ProductInfoModal = ({ show, close, infoProducto, agregarEntrada, restarSal
         title={infoProducto?.nombre?.S}
       >
         <p>
-          <b>Existencia en almacen: {almacen}</b>
+          <b>Existencia: {almacen}</b>
         </p>
         <p>
           <b>Cantidad minima: {infoProducto?.minima?.S}</b>

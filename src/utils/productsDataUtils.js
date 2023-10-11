@@ -84,5 +84,9 @@ export const estadoProdcuto = [
   {
     id: '2',
     label: 'Inactivo'
+  },
+  {
+    id: '3',
+    label: 'Prueba'
   }
 ];

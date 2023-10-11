@@ -129,7 +129,7 @@ const Users = () => {
     },
     { field: 'stock', headerName: 'Stock', width: 100 },
     { field: 'lugar', headerName: 'Lugar', width: 200 },
-    { field: 'almacen', headerName: 'Existencia en almacen', width: 250 },
+    { field: 'almacen', headerName: 'Existencia', width: 250 },
     { field: 'minima', headerName: 'Cantida mínima', width: 200 },
     {
       field: 'informacion',
