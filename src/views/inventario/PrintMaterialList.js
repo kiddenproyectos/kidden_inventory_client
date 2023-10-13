@@ -41,16 +41,6 @@ const PrintMaterialList = () => {
           }}
         >
           <ImageModal imageLink={params.row.image} />
-
-          <Button>
-            Cambiar
-            <input
-              onChange={(e) => editExistingProductPicture({ nombre: params.row.nombre, imagen: e.target.files[0] })}
-              type="file"
-              accept="image/*"
-              style={{ width: '100%', position: 'absolute', top: 0, left: 0, opacity: 0 }}
-            />
-          </Button>
         </Box>
       )
     },

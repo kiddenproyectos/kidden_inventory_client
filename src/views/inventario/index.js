@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 // mui imports
 
-import { TextField, Box, Skeleton, Tooltip, Stack, Button } from '@mui/material/';
+import { TextField, Box, Skeleton, Tooltip, Stack, Button, Autocomplete } from '@mui/material/';
 // icons
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -21,6 +21,8 @@ import ProductInfoModal from './ProductInfoModal';
 // hooks
 import useProducts from 'hooks/useProducts';
 import { useSelector } from 'react-redux';
+// utils
+import { lugaresDeCompra } from 'utils/productsDataUtils';
 
 const Users = () => {
   /* eslint-disable */
@@ -69,7 +71,7 @@ const Users = () => {
     setInfoProducto(updatedProducts);
   };
 
-  const EditableField = ({ value, field, id }) => {
+  const EditableField = ({ value, field, id, number, lugar }) => {
     const [showEditButton, setShowEditButton] = useState(false);
     const [editableField, setEditableField] = useState(false);
     const [rowValue, setRowValue] = useState(value);
@@ -112,12 +114,39 @@ const Users = () => {
         {showEditButton && <EditIcon onClick={() => setEditableField(true)} />}
         <div style={fieldStyle}>
           {editableField ? (
-            <TextField
-              onKeyDown={(e) => onPressEnterEditablefield(e)}
-              name={field}
-              onChange={(e) => handleChange(e)}
-              label="Escribe el nuevo nombre"
-            />
+            lugar ? (
+              <>
+                <Autocomplete
+                  disablePortal
+                  sx={{ width: '200px' }}
+                  id="combo-box-demo"
+                  options={lugaresDeCompra}
+                  // onChange={(e) => setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() });
+                    setRowValue(e.target.outerText.toUpperCase());
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
+                />
+                <Button
+                  onClick={() =>
+                    editExistingProductData(id, formData).then(() => {
+                      setEditableField(false);
+                    })
+                  }
+                >
+                  Cambiar
+                </Button>
+              </>
+            ) : (
+              <TextField
+                onKeyDown={(e) => onPressEnterEditablefield(e)}
+                name={field}
+                type={number && 'number'}
+                onChange={(e) => handleChange(e)}
+                label="Escribe el nuevo nombre"
+              />
+            )
           ) : (
             <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue}</p>
           )}
@@ -213,10 +242,53 @@ const Users = () => {
       headerName: 'Estado',
       width: 100
     },
-    { field: 'stock', headerName: 'Stock', width: 100 },
-    { field: 'lugar', headerName: 'Lugar', width: 200 },
+    {
+      field: 'stock',
+      headerName: 'Stock',
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            <EditableField id={params.row.id} field={params.field} value={params.row.stock} number />
+          </Stack>
+        );
+      }
+    },
+    {
+      field: 'lugar',
+      headerName: 'Lugar',
+      width: 300,
+      renderCell: (params) => (
+        <Stack
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <EditableField lugar id={params.row.id} field={params.field} value={params.row.lugar} />
+        </Stack>
+      )
+    },
     { field: 'almacen', headerName: 'Existencia', width: 250 },
-    { field: 'minima', headerName: 'Cantida mínima', width: 200 },
+    {
+      field: 'minima',
+      headerName: 'Cantida mínima',
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            <EditableField id={params.row.id} field={params.field} value={params.row.minima} number />
+          </Stack>
+        );
+      }
+    },
     {
       field: 'informacion',
       headerName: 'Informacion',

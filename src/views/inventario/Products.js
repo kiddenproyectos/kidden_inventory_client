@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 // mui imports
-import { Stack, Tooltip, Switch } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 // project components
 import MainTable from 'ui-component/tables/MainTable';
@@ -43,17 +43,7 @@ const Products = () => {
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 100,
-      renderCell: (params) => (
-        <>
-          <Switch
-            checked={params.row.estado === 'Activo'} // Ajusta esto según la lógica de tu estado
-            onClick={(event) => {
-              event.stopPropagation(); // Detener la propagación del evento de clic
-            }}
-          />
-        </>
-      )
+      width: 100
     },
     { field: 'stock', headerName: 'Stock', width: 100 },
     { field: 'lugar', headerName: 'Lugar', width: 200 },
@@ -65,10 +55,10 @@ const Products = () => {
   ];
 
   const rows = allProducts.map((items) => ({
-    id: items?.id.S,
-    image: items?.imagenes.S,
+    id: items?.id?.S,
+    image: items?.imagenes?.S,
     nombre: items?.nombre?.S,
-    presentacion: items?.presentacion.S,
+    presentacion: items?.presentacion?.S,
     marca: items?.marca?.S,
     modelo: items?.modelo?.S,
     estado: items?.estado?.S,
