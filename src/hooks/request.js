@@ -102,6 +102,20 @@ export const httpPutProductPicture = async (data) => {
   const res = await response.json();
   return res;
 };
+// edit product data
+
+export const httpEditProductData = async (id, data) => {
+  const response = await fetch(`${PROD}/inventario/editar/producto/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json' // Establece el encabezado Content-Type
+    },
+    body: JSON.stringify(data)
+  });
+  const res = await response.json();
+  return res;
+};
+
 // delete products
 export const httpDeelteProducts = async (data) => {
   const response = await fetch(`${PROD}/inventario/eliminar-productos`, {

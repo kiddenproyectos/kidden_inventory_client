@@ -12,6 +12,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import InfoIcon from '@mui/icons-material/Info';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import EditIcon from '@mui/icons-material/Edit';
 // project imports
 import MainTable from 'ui-component/tables/MainTable';
 import AddProductModal from './AddProductModal';
@@ -32,15 +33,16 @@ const Users = () => {
     editExistingProductPicture,
     addProduct,
     agregarEntrada,
-    restarSalida
+    restarSalida,
+    editExistingProductData
   } = useProducts();
+
   const { products } = productos;
   const selectedRows = useSelector((state) => state.product?.id_rows_array);
   const [tableRows, setTableRows] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [showProductInfoModal, setShowProductInfoModal] = useState(false);
   const [infoProducto, setInfoProducto] = useState({});
-  const [showEditButton, setShowEditButton] = useState(false);
   const [idModal, setIdModal] = useState('');
   const navigate = useNavigate();
 
@@ -66,6 +68,64 @@ const Users = () => {
     const updatedProducts = serachObjectInArray(products, id);
     setInfoProducto(updatedProducts);
   };
+
+  const EditableField = ({ value, field, id }) => {
+    const [showEditButton, setShowEditButton] = useState(false);
+    const [editableField, setEditableField] = useState(false);
+    const [rowValue, setRowValue] = useState(value);
+
+    const [formData, setFormData] = useState({
+      [field]: `${value}`
+    });
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    };
+
+    const fieldStyle = {
+      wordWrap: 'break-word', // Esta propiedad permite que el texto salte de línea
+      whiteSpace: 'pre-wrap' // Esta propiedad mantiene los saltos de línea en el texto original
+    };
+    const onPressEnterEditablefield = (event) => {
+      if (event.key === 'Enter') {
+        return editExistingProductData(id, formData).then(() => {
+          setEditableField(false);
+          setRowValue(formData[field]);
+        });
+      }
+      if (event.key === ' ') {
+        event.stopPropagation();
+      }
+    };
+    return (
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        onMouseEnter={() => setShowEditButton(true)}
+        onMouseLeave={() => setShowEditButton(false)}
+      >
+        {showEditButton && <EditIcon onClick={() => setEditableField(true)} />}
+        <div style={fieldStyle}>
+          {editableField ? (
+            <TextField
+              onKeyDown={(e) => onPressEnterEditablefield(e)}
+              name={field}
+              onChange={(e) => handleChange(e)}
+              label="Escribe el nuevo nombre"
+            />
+          ) : (
+            <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue}</p>
+          )}
+        </div>
+      </Stack>
+    );
+  };
+
   useEffect(() => {
     const updatedProducts = serachObjectInArray(products, idModal);
     setInfoProducto(updatedProducts);
@@ -79,7 +139,6 @@ const Users = () => {
       renderCell: (params) => (
         <Box
           sx={{ height: '220px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-          onMouseEnter={() => setShowEditButton(true)}
           onClick={(event) => {
             event.stopPropagation(); // Detener la propagación del evento de clic
           }}
@@ -110,18 +169,45 @@ const Users = () => {
           alignItems="center"
           onClick={(event) => {
             event.stopPropagation();
-            navigate(`/articulo/${params.row.nombre}`);
           }}
         >
-          <p style={{ fontSize: '16px', fontWeight: '500' }}>{params.row.nombre}</p>
+          <EditableField id={params.row.id} field={params.field} value={params.row.nombre} />
           <Tooltip title="Entradas y Salidas" placement="top">
-            <OpenInNewIcon />
+            <OpenInNewIcon onClick={() => navigate(`/articulo/${params.row.nombre}`)} />
           </Tooltip>
         </Stack>
       )
     },
-    { field: 'presentacion', headerName: 'Presentación', width: 200 },
-    { field: 'modelo', headerName: 'Modelo', width: 200 },
+    {
+      field: 'presentacion',
+      headerName: 'Paquete',
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            <EditableField id={params.row.id} field={params.field} value={params.row.presentacion} />
+          </Stack>
+        );
+      }
+    },
+    {
+      field: 'modelo',
+      headerName: 'Modelo',
+      width: 200,
+      renderCell: (params) => (
+        <Stack
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <EditableField field={params.field} value={params.row.modelo} />
+        </Stack>
+      )
+    },
     {
       field: 'estado',
       headerName: 'Estado',
