@@ -35,7 +35,6 @@ const PrintMaterialList = () => {
       renderCell: (params) => (
         <Box
           sx={{ height: '220px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-          onMouseEnter={() => setShowEditButton(true)}
           onClick={(event) => {
             event.stopPropagation(); // Detener la propagación del evento de clic
           }}
@@ -101,20 +100,19 @@ const PrintMaterialList = () => {
   const filterByPlace = (place) => {
     const productsToFilter = [...selectedProducts];
     const filtered = productsToFilter.filter((item) => item.lugar.S === place);
-
     if (filtered.length === 0 && place) {
       setNoProductsMessage(true);
+      setFilteredProducts(filtered);
       setSelectedProducts(productsToFilter);
-      return null;
-    } else if (place === undefined) {
+    }
+    if (place === undefined) {
       setSelectedProducts(filteredProducts);
       setNoProductsMessage(false);
       setLugar('Todos los artículos');
     } else {
       setNoProductsMessage(false);
-      setSelectedProducts(filtered);
+      setFilteredProducts(filtered);
       setLugar(place);
-      return filtered;
     }
   };
 

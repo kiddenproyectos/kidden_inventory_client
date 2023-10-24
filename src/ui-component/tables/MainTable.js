@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 const MainTable = ({ rows, columns, inventario, print }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
-
   /* eslint-disable */
   const [tableRows, setTableRows] = useState(rows);
   useEffect(() => {
