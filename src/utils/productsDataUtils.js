@@ -73,6 +73,38 @@ export const presentacionDeProductos = [
   {
     id: '8',
     label: 'Tablilla'
+  },
+  {
+    id: '9',
+    label: 'Hoja'
+  },
+  {
+    id: '10',
+    label: 'Tira'
+  },
+  {
+    id: '11',
+    label: 'Metro'
+  },
+  {
+    id: '12',
+    label: 'Kit'
+  },
+  {
+    id: '13',
+    label: 'Paquete'
+  },
+  {
+    id: '14',
+    label: 'Tubo'
+  },
+  {
+    id: '15',
+    label: 'Cartucho'
+  },
+  {
+    id: '16',
+    label: 'Block'
   }
 ];
 
