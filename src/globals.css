@@ -1,0 +1,6 @@
+.fixed-header {
+  position: sticky;
+  top: 0;
+  background-color: white; /* El color que desees para el fondo del encabezado */
+  z-index: 1;
+}

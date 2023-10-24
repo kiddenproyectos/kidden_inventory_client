@@ -11,6 +11,8 @@ import useProducts from 'hooks/useProducts';
 // utils
 import { lugaresDeCompra } from 'utils/productsDataUtils';
 import Logo from 'ui-component/Logo';
+// css
+import '../../globals.css';
 
 const PrintMaterialList = () => {
   const { allProducts } = useProducts();
@@ -31,6 +33,7 @@ const PrintMaterialList = () => {
     {
       field: 'image',
       headerName: 'Foto',
+      headerClassName: 'super-app-theme--header',
       width: 200,
       renderCell: (params) => (
         <Box

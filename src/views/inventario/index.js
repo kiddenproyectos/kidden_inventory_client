@@ -189,7 +189,7 @@ const Users = () => {
     {
       field: 'nombre',
       headerName: 'Artículo',
-      width: 400,
+      width: 200,
       renderCell: (params) => (
         <Stack
           sx={{ cursor: 'pointer', width: '100%' }}
@@ -210,7 +210,7 @@ const Users = () => {
     {
       field: 'presentacion',
       headerName: 'Paquete',
-      width: 250,
+      width: 100,
       renderCell: (params) => {
         return (
           <Stack
@@ -226,7 +226,7 @@ const Users = () => {
     {
       field: 'modelo',
       headerName: 'Modelo',
-      width: 200,
+      width: 100,
       renderCell: (params) => (
         <Stack
           onClick={(event) => {
@@ -245,7 +245,7 @@ const Users = () => {
     {
       field: 'stock',
       headerName: 'Stock',
-      width: 200,
+      width: 70,
       renderCell: (params) => {
         return (
           <Stack
@@ -261,7 +261,7 @@ const Users = () => {
     {
       field: 'lugar',
       headerName: 'Lugar',
-      width: 300,
+      width: 120,
       renderCell: (params) => (
         <Stack
           onClick={(event) => {
@@ -272,11 +272,11 @@ const Users = () => {
         </Stack>
       )
     },
-    { field: 'almacen', headerName: 'Existencia', width: 250 },
+    { field: 'almacen', headerName: 'Existencia', width: 80 },
     {
       field: 'minima',
-      headerName: 'Cantida mínima',
-      width: 200,
+      headerName: 'Mínima',
+      width: 100,
       renderCell: (params) => {
         return (
           <Stack
@@ -291,8 +291,8 @@ const Users = () => {
     },
     {
       field: 'informacion',
-      headerName: 'Informacion',
-      width: 110,
+      headerName: 'Info',
+      width: 90,
       renderCell: (params) => (
         <Stack direction="row" justifyContent="center">
           <InfoIcon

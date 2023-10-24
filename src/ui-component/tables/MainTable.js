@@ -26,6 +26,14 @@ const MainTable = ({ rows, columns, inventario, print }) => {
           border: 2,
           background: 'white',
           borderColor: 'primary.light',
+          '& .MuiDataGrid-columnHeaders': {
+            position: 'fixed',
+            zIndex: 1000,
+            backgroundColor: 'white'
+          },
+          '& .MuiDataGrid-virtualScroller': {
+            marginTop: '80px'
+          },
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent'
           },
