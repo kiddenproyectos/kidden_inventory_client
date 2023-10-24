@@ -11,8 +11,6 @@ import useProducts from 'hooks/useProducts';
 // utils
 import { lugaresDeCompra } from 'utils/productsDataUtils';
 import Logo from 'ui-component/Logo';
-// css
-import '../../globals.css';
 
 const PrintMaterialList = () => {
   const { allProducts } = useProducts();
@@ -62,7 +60,7 @@ const PrintMaterialList = () => {
       }
     },
     { field: 'marca', headerName: 'Marca', width: 150 },
-    { field: 'presentacion', headerName: 'Presentacion', width: 150 },
+    { field: 'presentacion', headerName: 'Paquete', width: 150 },
     { field: 'modelo', headerName: 'Modelo', width: 100 }
     // { field: 'lugar', headerName: 'Lugar de Compra', width: 100 }
   ];

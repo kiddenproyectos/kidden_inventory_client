@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 // mui imports
-import { Stack, Tooltip } from '@mui/material';
+import { Stack, Tooltip, Box } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 // project components
 import MainTable from 'ui-component/tables/MainTable';
+import ImageModal from './ImageModal';
 // project hooks
 import useProducts from 'hooks/useProducts';
 // utilities
@@ -18,7 +19,7 @@ const Products = () => {
     {
       field: 'nombre',
       headerName: 'Artículo',
-      width: 400,
+      width: 200,
       renderCell: (params) => (
         <Stack
           sx={{ cursor: 'pointer', width: '100%' }}
@@ -31,27 +32,44 @@ const Products = () => {
             navigate(`/articulo/${params.row.nombre}`);
           }}
         >
-          <p style={{ fontSize: '16px', fontWeight: '500' }}>{params.row.nombre}</p>
-          <Tooltip title="Entradas y Salidas" placement="top">
-            <OpenInNewIcon />
-          </Tooltip>
+          <div style={{ fontSize: '14px', fontWeight: '500', whiteSpace: 'break-spaces' }}>
+            <p>{params.row.nombre}</p>
+            <Tooltip title="Entradas y Salidas" placement="top">
+              <OpenInNewIcon />
+            </Tooltip>
+          </div>
         </Stack>
       )
     },
-    { field: 'presentacion', headerName: 'Presentación', width: 200 },
-    { field: 'modelo', headerName: 'Modelo', width: 200 },
+    {
+      field: 'image',
+      headerName: 'Foto',
+      width: 180,
+      renderCell: (params) => (
+        <Box
+          sx={{ height: '220px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+          onClick={(event) => {
+            event.stopPropagation(); // Detener la propagación del evento de clic
+          }}
+        >
+          <ImageModal imageLink={params.row.image} />
+        </Box>
+      )
+    },
+    { field: 'presentacion', headerName: 'Paquete', width: 80 },
+    { field: 'modelo', headerName: 'Modelo', width: 80 },
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 100
+      width: 80
     },
-    { field: 'stock', headerName: 'Stock', width: 100 },
-    { field: 'lugar', headerName: 'Lugar', width: 200 },
-    { field: 'almacen', headerName: 'Existencia en almacen', width: 250 },
-    { field: 'minima', headerName: 'Cantidad mínima', width: 200 },
-    { field: 'fechaAgregado', headerName: 'Fecha Agregado', width: 200 },
-    { field: 'month', headerName: 'Mes', width: 200 },
-    { field: 'year', headerName: 'Año', width: 200 }
+    { field: 'stock', headerName: 'Stock', width: 80 },
+    { field: 'lugar', headerName: 'Lugar', width: 100 },
+    { field: 'almacen', headerName: 'Existencia', width: 60 },
+    { field: 'minima', headerName: 'Mínima', width: 50 },
+    { field: 'fechaAgregado', headerName: 'Fecha', width: 100 },
+    { field: 'month', headerName: 'Mes', width: 80 },
+    { field: 'year', headerName: 'Año', width: 70 }
   ];
 
   const rows = allProducts.map((items) => ({
