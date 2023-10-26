@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // mui imports
-import { Stack, Tooltip, Box } from '@mui/material';
+import { Stack, Tooltip, Box, TextField, Button } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+
 // project components
 import MainTable from 'ui-component/tables/MainTable';
 import ImageModal from './ImageModal';
@@ -12,8 +14,30 @@ import useProducts from 'hooks/useProducts';
 import { fixDateForProductTable, mesesDelAnio } from 'views/utilities/OrganizerDate';
 
 const Products = () => {
-  const { allProducts } = useProducts();
+  const { allProducts, restartSearch } = useProducts();
   const navigate = useNavigate();
+  const [tableRows, setTableRows] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  console.log(allProducts);
+
+  const onClickSearchButton = (value) => {
+    const initialArray = [...tableRows];
+    const filteredProducts = initialArray.filter((producto) => {
+      const nombre = producto.nombre && producto.nombre.S; // Asegúrate de acceder correctamente al nombre
+      // Convierte el nombre del producto a minúsculas y verifica si incluye la cadena de búsqueda en minúsculas
+      return nombre && nombre.toLowerCase().includes(value);
+    });
+    setTableRows(filteredProducts);
+  };
+
+  useEffect(() => {
+    setTableRows(allProducts);
+  }, [allProducts]);
+
+  const onClickResetButton = () => {
+    restartSearch();
+    setSearchValue('');
+  };
 
   const columns = [
     {
@@ -72,7 +96,7 @@ const Products = () => {
     { field: 'year', headerName: 'Año', width: 70 }
   ];
 
-  const rows = allProducts.map((items) => ({
+  const rows = tableRows.map((items) => ({
     id: items?.id?.S,
     image: items?.imagenes?.S,
     nombre: items?.nombre?.S,
@@ -93,6 +117,23 @@ const Products = () => {
 
   return (
     <div>
+      <Stack spacing={2} direction="row" justifyContent="space-between" mb={4}>
+        <Stack spacing={2} direction="row">
+          <TextField
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            id="input-with-sx"
+            label="Buscar por nombre"
+            variant="standard"
+          />
+          <Button disabled={!searchValue} variant="contained" onClick={() => onClickSearchButton(searchValue)}>
+            Buscar
+          </Button>
+          <Button disabled={!searchValue} variant="contained" onClick={onClickResetButton}>
+            <RestartAltIcon />
+          </Button>
+        </Stack>
+      </Stack>
       <MainTable rows={rows} columns={columns} inventario />
     </div>
   );
