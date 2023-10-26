@@ -177,7 +177,7 @@ const Users = () => {
           <Button>
             Cambiar
             <input
-              onChange={(e) => editExistingProductPicture({ nombre: params.row.nombre, imagen: e.target.files[0] })}
+              onChange={(e) => editExistingProductPicture({ nombre: params.row.nombre, imagen: e.target.files[0], id: params.row.id })}
               type="file"
               accept="image/*"
               style={{ width: '100%', position: 'absolute', top: 0, left: 0, opacity: 0 }}
