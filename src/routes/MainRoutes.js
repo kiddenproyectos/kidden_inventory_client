@@ -33,6 +33,7 @@ const InventroyYearPage = Loadable(lazy(() => import('views/inventario')));
 const ArticlePage = Loadable(lazy(() => import('views/inventario/EntradasSalidas')));
 const ProductsPage = Loadable(lazy(() => import('views/inventario/Products')));
 const PrintMaterialListPage = Loadable(lazy(() => import('views/inventario/PrintMaterialList')));
+const PrintMaterialListForInventory = Loadable(lazy(() => import('views/inventario/ListaDeInventario')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -79,6 +80,10 @@ const MainRoutes = {
         {
           path: '/imprimir-lista',
           element: <PrintMaterialListPage />
+        },
+        {
+          path: '/imprimir-lista-inventario',
+          element: <PrintMaterialListForInventory />
         }
       ]
     }
