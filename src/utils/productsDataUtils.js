@@ -58,10 +58,7 @@ export const presentacionDeProductos = [
     id: '4',
     label: 'Frasco gotero'
   },
-  {
-    id: '5',
-    label: 'Caja'
-  },
+
   {
     id: '6',
     label: 'Bolsa'
@@ -120,5 +117,20 @@ export const estadoProdcuto = [
   {
     id: '3',
     label: 'Prueba'
+  }
+];
+
+export const unidadesDeProductos = [
+  {
+    id: '1',
+    label: 'Piezas'
+  },
+  {
+    id: '2',
+    label: 'ml'
+  },
+  {
+    id: '3',
+    label: 'botes'
   }
 ];

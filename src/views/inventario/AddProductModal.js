@@ -1,8 +1,13 @@
-import { useState } from 'react';
 /* eslint-disable */
+import { useEffect, useState } from 'react';
 
 // mui import
 import Modal from '@mui/material/Modal';
+import Radio from '@mui/material/Radio';
+import RadioGroup, { useRadioGroup } from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { styled } from '@mui/material/styles';
+import FormLabel from '@mui/material/FormLabel';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -14,10 +19,11 @@ import Alert from '@mui/material/Alert';
 // project import
 import ModalUI from 'ui-component/ModalUI';
 // utils import
-import { lugaresDeCompra, presentacionDeProductos, estadoProdcuto } from 'utils/productsDataUtils';
+import { lugaresDeCompra, presentacionDeProductos, estadoProdcuto, unidadesDeProductos } from 'utils/productsDataUtils';
 
 const AddProductModal = ({ addProduct, showModal, closeModal }) => {
   // dropdown options
+  const [showOptionalBox, setShowOptionalBox] = useState('si');
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -29,7 +35,10 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
     lugar: '',
     imagen: '',
     almacen: '',
-    minima: ''
+    minima: '',
+    caja: showOptionalBox,
+    piezasPorCaja: '',
+    unidad: ''
   });
 
   const handleChange = (e, setFormData) => {
@@ -70,6 +79,36 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
       }
     });
   };
+
+  const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />)(({ theme, checked }) => ({
+    '.MuiFormControlLabel-label': checked && {
+      color: theme.palette.primary.main
+    }
+  }));
+
+  function MyFormControlLabel(props) {
+    // useEffect(() => {
+    //   setFormData({ ...formData, caja: showOptionalBox });
+    // }, [formData]);
+
+    const radioGroup = useRadioGroup();
+    let checked = false;
+    if (radioGroup) {
+      checked = radioGroup?.value === props?.value;
+    }
+
+    return (
+      <StyledFormControlLabel
+        onChange={(e) => {
+          setShowOptionalBox(e.target.value);
+          setFormData({ ...formData, caja: e.target.value });
+        }}
+        checked={checked}
+        {...props}
+      />
+    );
+  }
+
   return (
     <>
       <Modal
@@ -90,24 +129,77 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
                 variant="outlined"
               />
             </Stack>
-            <Stack spacing={2} direction="row" mt={2}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-presentacion"
-                options={presentacionDeProductos}
-                sx={{ width: '60%' }}
-                onChange={(e) => setFormData({ ...formData, presentacion: e.target.outerText.toUpperCase() })}
-                renderInput={(params) => <TextField {...params} label="Paquete" />}
-              />
-              <TextField
-                name="marca"
-                required
-                onChange={(e) => handleInputChange(e)}
-                color="secondary"
-                id="outlined-basic"
-                label="Marca"
-                variant="outlined"
-              />
+            <Stack direction="row" spacing={2} mt={2}>
+              <Stack sx={{ width: '50%' }}>
+                <FormLabel>Tipo de paquete</FormLabel>
+                <RadioGroup row name="use-radio-group" defaultValue="si">
+                  <MyFormControlLabel value="si" label="Caja" control={<Radio />} />
+                  <MyFormControlLabel value="no" label="Otro" control={<Radio />} />
+                </RadioGroup>
+              </Stack>
+              {showOptionalBox === 'si' ? (
+                <TextField
+                  name="cantidad-piezas-caja"
+                  required
+                  sx={{ width: '50%' }}
+                  onChange={(e) => handleInputChange(e)}
+                  color="secondary"
+                  id="outlined-basic"
+                  label="Piezas por caja"
+                  type="number"
+                  variant="outlined"
+                />
+              ) : (
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-presentacion"
+                  options={presentacionDeProductos}
+                  sx={{ width: '50%' }}
+                  onChange={(e) => setFormData({ ...formData, presentacion: e.target.outerText.toUpperCase() })}
+                  renderInput={(params) => <TextField {...params} label="Paquete" />}
+                />
+              )}
+            </Stack>
+            <Stack>
+              {showOptionalBox === 'si' ? (
+                <Stack direction="row">
+                  <TextField
+                    name="almacen"
+                    sx={{ width: '50%' }}
+                    required
+                    onChange={(e) => handleInputChange(e)}
+                    color="secondary"
+                    id="outlined-basic"
+                    label="Numero de Cajas"
+                    type="number"
+                    variant="outlined"
+                  />
+                  <p style={{ marginLeft: '10px', fontSize: '18px' }}>Cajas</p>
+                </Stack>
+              ) : (
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    name="almacen"
+                    sx={{ width: '70%' }}
+                    required
+                    onChange={(e) => handleInputChange(e)}
+                    color="secondary"
+                    id="outlined-basic"
+                    label="Existencia"
+                    type="number"
+                    variant="outlined"
+                  />
+                  <Autocomplete
+                    sx={{ width: '30%' }}
+                    required
+                    disablePortal
+                    id="combo-box-demo"
+                    options={unidadesDeProductos}
+                    onChange={(e) => setFormData({ ...formData, unidad: e.target.outerText.toUpperCase() })}
+                    renderInput={(params) => <TextField {...params} label="Unidad" />}
+                  />
+                </Stack>
+              )}
             </Stack>
             <Stack spacing={2} direction="row" mt={2}>
               <TextField
@@ -138,14 +230,14 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
                 onChange={(e) => setFormData({ ...formData, estado: e.target.outerText })}
                 renderInput={(params) => <TextField {...params} label="Estado" />}
               />
+
               <TextField
-                name="almacen"
+                name="marca"
                 required
                 onChange={(e) => handleInputChange(e)}
                 color="secondary"
                 id="outlined-basic"
-                label="Existencia"
-                type="number"
+                label="Marca"
                 variant="outlined"
               />
             </Stack>

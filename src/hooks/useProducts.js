@@ -171,9 +171,9 @@ const useProducts = () => {
   );
 
   const agregarEntrada = useCallback(
-    async ({ almacen, entradas, id, nombre }) => {
+    async ({ almacen, entradas, nombre, id, caja, piezasTotales, piezasPorCaja }) => {
       try {
-        const response = await httpSumarEntrada({ almacen, entradas, id, nombre });
+        const response = await httpSumarEntrada({ almacen, entradas, nombre, id, caja, piezasTotales, piezasPorCaja });
         if (response.productoEditado) {
           // Clona el array para evitar mutar el estado directamente
           const updatedInventario = [...reduxProducts.products];
@@ -200,9 +200,10 @@ const useProducts = () => {
   );
 
   const restarSalida = useCallback(
-    async ({ almacen, salidas, minima, nombre, id }) => {
+    async ({ almacen, salidas, minima, nombre, id, caja, piezasTotales, piezasPorCaja }) => {
+      console.log('total', piezasTotales);
       try {
-        const response = await httpRestarSalidas({ almacen, salidas, minima, nombre, id });
+        const response = await httpRestarSalidas({ almacen, salidas, minima, nombre, id, caja, piezasTotales, piezasPorCaja });
         if (response.productoEditado) {
           // Clona el array para evitar mutar el estado directamente
           const updatedInventario = [...reduxProducts.products];

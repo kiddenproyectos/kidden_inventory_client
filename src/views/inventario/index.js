@@ -218,7 +218,15 @@ const Users = () => {
               event.stopPropagation();
             }}
           >
-            <EditableField id={params.row.id} field={params.field} value={params.row.presentacion} />
+            {params.row.caja === 'si' ? (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>📦 Caja</p>
+                <p>Piezas x caja</p>
+                <p>{params.row.piezasPorCaja}</p>
+              </Stack>
+            ) : (
+              <EditableField id={params.row.id} field={params.field} value={params.row.presentacion} />
+            )}
           </Stack>
         );
       }
@@ -272,7 +280,32 @@ const Users = () => {
         </Stack>
       )
     },
-    { field: 'almacen', headerName: 'Existencia', width: 80 },
+    {
+      field: 'almacen',
+      headerName: 'Existencia',
+      width: 80,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            {params.row.caja === 'si' ? (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>Caja:{params.row.almacen}</p>
+                <p>Total:</p>
+                <p>{params.row.piezasPorCaja * params.row.almacen}</p>
+              </Stack>
+            ) : (
+              <p>
+                {params.row.almacen} {params.row.unidad}{' '}
+              </p>
+            )}
+          </Stack>
+        );
+      }
+    },
     {
       field: 'minima',
       headerName: 'Mínima',
@@ -323,7 +356,10 @@ const Users = () => {
     almacen: items?.almacen.S,
     entradas: items?.entradas.S,
     salidas: items?.salidas.S,
-    minima: items?.minima.S
+    minima: items?.minima.S,
+    caja: items?.caja?.S,
+    piezasPorCaja: items?.piezasPorCaja?.S,
+    unidad: items?.unidad?.S
   }));
 
   const onClickSearchButton = (value) => {

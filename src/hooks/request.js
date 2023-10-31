@@ -72,7 +72,9 @@ export const httpPostNewProduct = async (data) => {
   formData.append('lugar', data.lugar);
   formData.append('almacen', data.almacen);
   formData.append('minima', data.minima);
-
+  formData.append('caja', data.caja);
+  formData.append('piezasPorCaja', data['cantidad-piezas-caja']);
+  formData.append('unidad', data.unidad);
   // Agrega la imagen al FormData
   formData.append('imagen', data.imagen);
 
@@ -130,28 +132,42 @@ export const httpDeelteProducts = async (data) => {
 };
 
 // sumar entradas
-export const httpSumarEntrada = async ({ almacen, entradas, id, nombre }) => {
+export const httpSumarEntrada = async ({ almacen, entradas, nombre, id, caja, piezasTotales, piezasPorCaja }) => {
   console.log({ almacen, entradas, id });
   const response = await fetch(`${PROD}/inventario/sumar-entrada/${id}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ almacen, entradas: entradas.toString(), nombre })
+    body: JSON.stringify({
+      almacen,
+      entradas: entradas.toString(),
+      nombre,
+      caja,
+      piezasTotales: piezasTotales?.toString(),
+      piezasPorCaja: piezasPorCaja?.toString()
+    })
   });
   const res = await response.json();
   return res;
 };
 
 // restar salidas
-export const httpRestarSalidas = async ({ almacen, salidas, minima, nombre, id }) => {
-  console.log({ almacen, salidas, minima, nombre, id });
+export const httpRestarSalidas = async ({ almacen, salidas, minima, nombre, id, caja, piezasTotales, piezasPorCaja }) => {
   const response = await fetch(`${PROD}/inventario/restar-salida/${id}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ almacen, salidas: salidas.toString(), minima, nombre })
+    body: JSON.stringify({
+      almacen,
+      salidas: salidas.toString(),
+      minima,
+      nombre,
+      caja,
+      piezasTotales: piezasTotales?.toString(),
+      piezasPorCaja: piezasPorCaja?.toString()
+    })
   });
   const res = await response.json();
   return res;
