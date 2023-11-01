@@ -52,7 +52,8 @@ export const calcularMesesRestantes = () => {
 
   const fechaActual = new Date();
   const mesActual = fechaActual.getMonth() + 1; // 0 para enero, 1 para febrero, ...
-  const mesesRestantes = mesesDelAnio.slice(mesActual - 1, 12).map((item) => ({
+  // TODO arreglar funcion de meses restantes
+  const mesesRestantes = mesesDelAnio.slice(mesActual - 2, 12).map((item) => ({
     mes: item.nombre,
     index: item.num,
     activo: item.num <= mesActual
