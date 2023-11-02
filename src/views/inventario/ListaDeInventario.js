@@ -47,7 +47,28 @@ const ListaDeInventario = () => {
     {
       field: 'existencia',
       headerName: 'Existencia',
-      width: 100
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            {params.row.caja === 'si' ? (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>Caja:{params.row.almacen}</p>
+                <p>Total:</p>
+                <p>{params.row.piezasPorCaja * params.row.almacen}</p>
+              </Stack>
+            ) : (
+              <p>
+                {params.row.almacen} {params.row.unidad}{' '}
+              </p>
+            )}
+          </Stack>
+        );
+      }
     },
     { field: 'marca', headerName: 'Marca', width: 150 },
     { field: 'presentacion', headerName: 'Paquete', width: 150 },
@@ -65,7 +86,10 @@ const ListaDeInventario = () => {
     stock: items?.stock?.S,
     lugar: items?.lugar?.S,
     almacen: items?.almacen?.S,
-    existencia: items?.almacen?.S
+    existencia: items?.almacen?.S,
+    caja: items?.caja?.S,
+    piezasPorCaja: items?.piezasPorCaja?.S,
+    unidad: items?.unidad?.S
   }));
 
   const onClickPrintButton = () => {

@@ -51,7 +51,6 @@ const Products = () => {
           alignItems="center"
           onClick={(event) => {
             event.stopPropagation();
-            console.log(params.row.nombre);
             navigate(`/articulo/${params.row.nombre}`);
           }}
         >
@@ -79,7 +78,30 @@ const Products = () => {
         </Box>
       )
     },
-    { field: 'presentacion', headerName: 'Paquete', width: 80 },
+    {
+      field: 'presentacion',
+      headerName: 'Paquete',
+      width: 80,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            {params.row.caja === 'si' ? (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>📦 Caja</p>
+                <p>Piezas x caja</p>
+                <p>{params.row.piezasPorCaja}</p>
+              </Stack>
+            ) : (
+              <p>{params.row.presentacion}</p>
+            )}
+          </Stack>
+        );
+      }
+    },
     { field: 'modelo', headerName: 'Modelo', width: 80 },
     {
       field: 'estado',
@@ -88,7 +110,32 @@ const Products = () => {
     },
     { field: 'stock', headerName: 'Stock', width: 80 },
     { field: 'lugar', headerName: 'Lugar', width: 100 },
-    { field: 'almacen', headerName: 'Existencia', width: 60 },
+    {
+      field: 'almacen',
+      headerName: 'Existencia',
+      width: 60,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            {params.row.caja === 'si' ? (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>Caja:{params.row.almacen}</p>
+                <p>Total:</p>
+                <p>{params.row.piezasPorCaja * params.row.almacen}</p>
+              </Stack>
+            ) : (
+              <p>
+                {params.row.almacen} {params.row.unidad}{' '}
+              </p>
+            )}
+          </Stack>
+        );
+      }
+    },
     { field: 'minima', headerName: 'Mínima', width: 50 },
     { field: 'fechaAgregado', headerName: 'Fecha', width: 100 },
     { field: 'month', headerName: 'Mes', width: 80 },
@@ -111,7 +158,10 @@ const Products = () => {
     minima: items?.minima?.S,
     fechaAgregado: fixDateForProductTable(items?.fechaAgregado?.S),
     month: mesesDelAnio[items?.month?.S],
-    year: items?.year?.S
+    year: items?.year?.S,
+    caja: items?.caja?.S,
+    piezasPorCaja: items?.piezasPorCaja?.S,
+    unidad: items?.unidad?.S
   }));
 
   return (
