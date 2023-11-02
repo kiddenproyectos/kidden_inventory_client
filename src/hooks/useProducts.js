@@ -256,6 +256,7 @@ const useProducts = () => {
   useEffect(() => {
     if (month) {
       getProductsPerMonth(month);
+      getAllProducts();
     } else if (nombre) {
       entradasPorProducto(nombre);
       // .then(() => salidasPorProducto(nombre));

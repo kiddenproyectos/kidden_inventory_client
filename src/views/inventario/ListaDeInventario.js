@@ -14,6 +14,7 @@ import Logo from 'ui-component/Logo';
 
 const ListaDeInventario = () => {
   const { allProducts } = useProducts();
+
   const [noProductsMessage, setNoProductsMessage] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);

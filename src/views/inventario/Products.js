@@ -18,7 +18,6 @@ const Products = () => {
   const navigate = useNavigate();
   const [tableRows, setTableRows] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  console.log(allProducts);
 
   const onClickSearchButton = (value) => {
     const initialArray = [...tableRows];

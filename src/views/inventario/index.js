@@ -29,13 +29,13 @@ const Users = () => {
   const {
     productos,
     deleteProducts,
-    searchProduct,
     restartSearch,
     loader,
     editExistingProductPicture,
     addProduct,
     agregarEntrada,
     restarSalida,
+    allProducts,
     editExistingProductData
   } = useProducts();
 
@@ -48,9 +48,23 @@ const Users = () => {
   const [idModal, setIdModal] = useState('');
   const navigate = useNavigate();
 
+  function removeDuplicates(array, key) {
+    const unique = {};
+    return array.filter((item) => {
+      const keyValue = item[key].S; // Acceder al valor 'S'
+      if (!unique[keyValue]) {
+        unique[keyValue] = true;
+        return true;
+      }
+      return false;
+    });
+  }
+
   useEffect(() => {
-    setTableRows(products);
-  }, [products]);
+    const mergedRows = [...products, ...allProducts];
+    const uniqueRows = removeDuplicates(mergedRows, 'id');
+    setTableRows(uniqueRows);
+  }, [products, allProducts]);
 
   const onCloseProductInfoModal = () => {
     setShowProductInfoModal(false);
@@ -344,27 +358,34 @@ const Users = () => {
   const [modal, setModal] = useState(false);
 
   const rows = tableRows.map((items) => ({
-    id: items?.id.S,
-    image: items?.imagenes.S,
+    id: items?.id?.S,
+    image: items?.imagenes?.S,
     nombre: items?.nombre?.S,
-    presentacion: items?.presentacion.S,
-    marca: items?.marca.S,
-    modelo: items?.modelo.S,
-    estado: items?.estado.S,
-    stock: items?.stock.S,
-    lugar: items?.lugar.S,
-    almacen: items?.almacen.S,
-    entradas: items?.entradas.S,
-    salidas: items?.salidas.S,
-    minima: items?.minima.S,
+    presentacion: items?.presentacion?.S,
+    marca: items?.marca?.S,
+    modelo: items?.modelo?.S,
+    estado: items?.estado?.S,
+    stock: items?.stock?.S,
+    lugar: items?.lugar?.S,
+    almacen: items?.almacen?.S,
+    entradas: items?.entradas?.S,
+    salidas: items?.salidas?.S,
+    minima: items?.minima?.S,
     caja: items?.caja?.S,
     piezasPorCaja: items?.piezasPorCaja?.S,
     unidad: items?.unidad?.S
   }));
 
   const onClickSearchButton = (value) => {
-    searchProduct(value);
+    const initialArray = [...tableRows];
+    const filteredProducts = initialArray.filter((producto) => {
+      const nombre = producto.nombre && producto.nombre.S; // Asegúrate de acceder correctamente al nombre
+      // Convierte el nombre del producto a minúsculas y verifica si incluye la cadena de búsqueda en minúsculas
+      return nombre && nombre.toLowerCase().includes(value);
+    });
+    setTableRows(filteredProducts);
   };
+
   const onClickResetButton = () => {
     restartSearch();
     setSearchValue('');
