@@ -79,9 +79,10 @@ const Users = () => {
     const object = array[productIndex];
     return object;
   };
+
   const onClickColumnInfo = (id) => {
     setIdModal(id);
-    const updatedProducts = serachObjectInArray(products, id);
+    const updatedProducts = serachObjectInArray(tableRows, id);
     setInfoProducto(updatedProducts);
   };
 
