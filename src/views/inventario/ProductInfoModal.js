@@ -10,8 +10,8 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import ModalUI from 'ui-component/ModalUI';
 
 const ProductInfoModal = ({ show, close, infoProducto, agregarEntrada, restarSalida }) => {
+  console.log(infoProducto);
   const [almacen, setAlmacen] = useState(infoProducto?.almacen?.S);
-
   const [entradas, setEntradas] = useState(0);
   const [salidas, setSalidas] = useState(0);
 

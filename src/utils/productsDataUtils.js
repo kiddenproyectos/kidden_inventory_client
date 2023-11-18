@@ -5,39 +5,55 @@ export const lugaresDeCompra = [
   },
   {
     id: '2',
-    label: 'Cuellar'
+    label: 'Material Dental - Multident'
   },
   {
     id: '3',
-    label: 'Supermercado'
+    label: 'Material Dental - Vicefi'
   },
   {
     id: '4',
-    label: 'Farmacia'
+    label: 'Material Dental - Dental udave'
   },
   {
     id: '5',
-    label: 'Office Depot'
+    label: 'Cuellar'
   },
   {
     id: '6',
-    label: 'Papeleria Empresarial'
+    label: 'Supermercado'
   },
   {
     id: '7',
-    label: 'USA'
+    label: 'Farmacia'
   },
   {
     id: '8',
-    label: 'Compras por Internet'
+    label: 'Office Depot'
   },
   {
     id: '9',
-    label: 'Producto de venta'
+    label: 'Papeleria Empresarial'
   },
   {
     id: '10',
+    label: 'USA'
+  },
+  {
+    id: '11',
+    label: 'Compras por Internet'
+  },
+  {
+    id: '12',
+    label: 'Producto de venta'
+  },
+  {
+    id: '13',
     label: 'Parisina'
+  },
+  {
+    id: '14',
+    label: 'Laboratorio'
   }
 ];
 
