@@ -54,6 +54,30 @@ export const lugaresDeCompra = [
   {
     id: '14',
     label: 'Laboratorio'
+  },
+  {
+    id: '15',
+    label: 'Oral B'
+  },
+  {
+    id: '16',
+    label: 'Borgatata'
+  },
+  {
+    id: '17',
+    label: 'Kodigo'
+  },
+  {
+    id: '18',
+    label: 'Lumar'
+  },
+  {
+    id: '19',
+    label: 'Tetekos'
+  },
+  {
+    id: '20',
+    label: 'Otros'
   }
 ];
 
