@@ -14,12 +14,13 @@ const MainTable = ({ rows, columns, inventario, print }) => {
   }, [rows]);
 
   return (
-    <div style={{ maxHeight: `${print ? '100%' : '80vh'}`, overflow: 'scroll' }}>
+    <div style={{ maxHeight: `${!print && '80vh'}`, overflow: 'scroll' }}>
       <DataGrid
         checkboxSelection
         rows={tableRows}
         columns={columns}
         rowHeight={inventario && 200}
+        pagination={false} // Desactivar la paginación
         onRowSelectionModelChange={(data) => dispatch({ type: 'SET_IDS_ROWS', id_rows_array: data })}
         sx={{
           boxShadow: 2,

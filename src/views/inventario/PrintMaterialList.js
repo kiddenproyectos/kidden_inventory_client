@@ -1,16 +1,17 @@
 /* eslint-disable */
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // mui imports
 import { Button, Box, Stack, Autocomplete, TextField } from '@mui/material';
 // project imports
-import MainTable from 'ui-component/tables/MainTable';
 import ImageModal from './ImageModal';
 // project hooks
 import useProducts from 'hooks/useProducts';
 // utils
 import { lugaresDeCompra } from 'utils/productsDataUtils';
 import Logo from 'ui-component/Logo';
+import { useReactToPrint } from 'react-to-print';
+// css
+import './table.css';
 
 const PrintMaterialList = () => {
   const { allProducts } = useProducts();
@@ -18,53 +19,24 @@ const PrintMaterialList = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [lugar, setLugar] = useState('Todos los artículos');
-  const [logo, setLogo] = useState(false);
 
   useEffect(() => {
-    const filterByNegativeProducts = allProducts.filter((item) => Number(item?.almacen?.S) - Number(item?.stock?.S) < 0);
+    const filterByNegativeProducts = allProducts
+      .filter((item) => Number(item?.almacen?.S) - Number(item?.stock?.S) < 0)
+      .sort((a, b) => a.nombre?.S.localeCompare(b.nombre?.S));
+
+    console.log(filterByNegativeProducts);
     setFilteredProducts(filterByNegativeProducts);
     setSelectedProducts(filterByNegativeProducts);
   }, [allProducts]);
 
-  const columns = [
-    { field: 'nombre', headerName: 'Artículo', width: 300 },
-    {
-      field: 'image',
-      headerName: 'Foto',
-      headerClassName: 'super-app-theme--header',
-      width: 200,
-      renderCell: (params) => (
-        <Box
-          sx={{ height: '220px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-          onClick={(event) => {
-            event.stopPropagation(); // Detener la propagación del evento de clic
-          }}
-        >
-          <ImageModal imageLink={params.row.image} />
-        </Box>
-      )
-    },
-    {
-      field: 'cantidad',
-      headerName: 'Cantidad',
-      width: 100,
-      renderCell: (params) => {
-        const resta = (a, b) => a - b;
-        const almacen = Number(params.row.almacen);
-        const stock = Number(params.row.stock);
-        return (
-          <>
-            <p style={{ fontSize: '16px', fontWeight: '600' }}>{Math.abs(resta(almacen, stock))}</p>
-          </>
-        );
-      }
-    },
-    { field: 'marca', headerName: 'Marca', width: 150 },
-    { field: 'presentacion', headerName: 'Paquete', width: 150 },
-    { field: 'modelo', headerName: 'Modelo', width: 100 }
-    // { field: 'lugar', headerName: 'Lugar de Compra', width: 100 }
-  ];
-
+  const obtenerCantindad = (almacen, stock) => {
+    const resta = (a, b) => a - b;
+    const almacenNum = Number(almacen);
+    const stockNum = Number(stock);
+    return Math.abs(resta(almacenNum, stockNum));
+  };
+  const columns = ['Producto', 'Foto', 'Cantidad', 'Marca', 'Presentacion', 'Modelo'];
   const rows = filteredProducts.map((items) => ({
     id: items?.id?.S,
     nombre: items?.nombre?.S,
@@ -77,26 +49,11 @@ const PrintMaterialList = () => {
     almacen: items?.almacen?.S
   }));
 
-  const onClickPrintButton = () => {
-    return new Promise((resolve, reject) => {
-      // Realiza cualquier trabajo necesario aquí, por ejemplo, establece el logo en true.
-      setLogo(true);
+  const componentRef = useRef();
 
-      // Luego, puedes llamar a resolve si la operación fue exitosa.
-      resolve();
-    });
-  };
-
-  function printdiv(elem) {
-    var header_str = '<html><head><title>' + document.title + '</title></head><body>';
-    var footer_str = '</body></html>';
-    var new_str = document.getElementById(elem)?.innerHTML;
-    var old_str = document.body.innerHTML;
-    document.body.innerHTML = header_str + new_str + footer_str;
-    window.print();
-    document.body.innerHTML = old_str;
-    return false;
-  }
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
+  });
   //   () => printdiv('printable_div_id'
   const filterByPlace = (place) => {
     const productsToFilter = [...selectedProducts];
@@ -121,16 +78,7 @@ const PrintMaterialList = () => {
     <>
       <Box>
         <Stack direction="row" justifyContent="center" spacing={2} my={2}>
-          <Button
-            variant="contained"
-            onClick={() => {
-              onClickPrintButton()
-                .then(() => {
-                  printdiv('printable_div_id'); // Asegúrate de reemplazar 'tu_elem_id' con el ID correcto del elemento que deseas imprimir.
-                })
-                .then(() => location.reload());
-            }}
-          >
+          <Button variant="contained" onClick={handlePrint}>
             Imprimir Lista
           </Button>
           <Autocomplete
@@ -146,10 +94,42 @@ const PrintMaterialList = () => {
           'no hay productos dados de alta en ese lugar'
         ) : (
           <>
-            <div id="printable_div_id">
-              {logo && <Logo />}
+            <div className="table_container" ref={componentRef} id="printable_div_id">
+              <Logo />
               <h2>{lugar}</h2>
-              <MainTable print inventario rows={rows} columns={columns} />
+              <div className="column_container">
+                {columns.map((item) => (
+                  <p key={item}>{item}</p>
+                ))}
+              </div>
+              <div>
+                {rows.map((item) => {
+                  return (
+                    <div key={item?.id} className="table_row">
+                      <div>
+                        <p>{item?.nombre}</p>
+                      </div>
+                      <div>
+                        <img src={item?.image} alt={item?.name} />
+                      </div>
+                      <div>
+                        <p>
+                          <b>{obtenerCantindad(item?.almacen, item?.stock)}</b>
+                        </p>
+                      </div>
+                      <div>
+                        <p>{item?.marca}</p>
+                      </div>
+                      <div>
+                        <p>{item?.presentacion}</p>
+                      </div>
+                      <div>
+                        <p>{item?.modelo}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </>
         )}
