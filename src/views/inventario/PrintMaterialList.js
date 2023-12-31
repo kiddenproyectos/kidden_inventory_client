@@ -24,8 +24,6 @@ const PrintMaterialList = () => {
     const filterByNegativeProducts = allProducts
       .filter((item) => Number(item?.almacen?.S) - Number(item?.stock?.S) < 0)
       .sort((a, b) => a.nombre?.S.localeCompare(b.nombre?.S));
-
-    console.log(filterByNegativeProducts);
     setFilteredProducts(filterByNegativeProducts);
     setSelectedProducts(filterByNegativeProducts);
   }, [allProducts]);

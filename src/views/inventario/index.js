@@ -382,6 +382,8 @@ const Users = () => {
     year: items?.year?.S
   }));
 
+  // --> Extra fucntions for filtereing and searching
+  // TODO: add date filter
   const onClickSearchButton = (value) => {
     const initialArray = [...tableRows];
     const filteredProducts = initialArray.filter((producto) => {
@@ -438,7 +440,7 @@ const Users = () => {
                 variant="contained"
                 color="error"
               >
-                Borrar Artículos Seleccionados
+                Borrar
               </Button>
               <Button onClick={onClickAddProductButton} startIcon={<PersonAddIcon />} variant="contained">
                 Agregar Artículo

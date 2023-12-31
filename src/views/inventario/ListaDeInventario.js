@@ -1,15 +1,13 @@
 /* eslint-disable */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // mui imports
 import { Button, Box, Stack, Autocomplete, TextField } from '@mui/material';
-// project imports
-import MainTable from 'ui-component/tables/MainTable';
-import ImageModal from './ImageModal';
 // project hooks
 import useProducts from 'hooks/useProducts';
 // utils
 import { lugaresDeCompra } from 'utils/productsDataUtils';
+import { useReactToPrint } from 'react-to-print';
 import Logo from 'ui-component/Logo';
 
 const ListaDeInventario = () => {
@@ -18,63 +16,15 @@ const ListaDeInventario = () => {
   const [noProductsMessage, setNoProductsMessage] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+
   const [lugar, setLugar] = useState('Todos los artículos');
-  const [logo, setLogo] = useState(false);
 
   useEffect(() => {
     setFilteredProducts(allProducts);
     setSelectedProducts(allProducts);
   }, [allProducts]);
 
-  const columns = [
-    { field: 'nombre', headerName: 'Artículo', width: 300 },
-    {
-      field: 'image',
-      headerName: 'Foto',
-      headerClassName: 'super-app-theme--header',
-      width: 200,
-      renderCell: (params) => (
-        <Box
-          sx={{ height: '220px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-          onClick={(event) => {
-            event.stopPropagation(); // Detener la propagación del evento de clic
-          }}
-        >
-          <ImageModal imageLink={params.row.image} />
-        </Box>
-      )
-    },
-    {
-      field: 'existencia',
-      headerName: 'Existencia',
-      width: 100,
-      renderCell: (params) => {
-        return (
-          <Stack
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            {params.row.caja === 'si' ? (
-              <Stack sx={{ fontWeight: '500' }}>
-                <p>Caja:{params.row.almacen}</p>
-                <p>Total:</p>
-                <p>{params.row.piezasPorCaja * params.row.almacen}</p>
-              </Stack>
-            ) : (
-              <p>
-                {params.row.almacen} {params.row.unidad}{' '}
-              </p>
-            )}
-          </Stack>
-        );
-      }
-    },
-    { field: 'marca', headerName: 'Marca', width: 150 },
-    { field: 'presentacion', headerName: 'Paquete', width: 150 },
-    { field: 'modelo', headerName: 'Modelo', width: 100 }
-    // { field: 'lugar', headerName: 'Lugar de Compra', width: 100 }
-  ];
+  const columns = ['Producto', 'Foto', 'Existencia', 'Marca', 'Modelo', 'Paquete'];
 
   const rows = filteredProducts.map((items) => ({
     id: items?.id?.S,
@@ -92,27 +42,12 @@ const ListaDeInventario = () => {
     unidad: items?.unidad?.S
   }));
 
-  const onClickPrintButton = () => {
-    return new Promise((resolve, reject) => {
-      // Realiza cualquier trabajo necesario aquí, por ejemplo, establece el logo en true.
-      setLogo(true);
+  console.log(rows);
+  const componentRef = useRef();
 
-      // Luego, puedes llamar a resolve si la operación fue exitosa.
-      resolve();
-    });
-  };
-
-  function printdiv(elem) {
-    var header_str = '<html><head><title>' + document.title + '</title></head><body>';
-    var footer_str = '</body></html>';
-    var new_str = document.getElementById(elem)?.innerHTML;
-    var old_str = document.body.innerHTML;
-    document.body.innerHTML = header_str + new_str + footer_str;
-    window.print();
-    document.body.innerHTML = old_str;
-    return false;
-  }
-  //   () => printdiv('printable_div_id'
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
+  });
   const filterByPlace = (place) => {
     const productsToFilter = [...selectedProducts];
     const filtered = productsToFilter.filter((item) => item.lugar.S === place);
@@ -136,16 +71,7 @@ const ListaDeInventario = () => {
     <>
       <Box>
         <Stack direction="row" justifyContent="center" spacing={2} my={2}>
-          <Button
-            variant="contained"
-            onClick={() => {
-              onClickPrintButton()
-                .then(() => {
-                  printdiv('printable_div_id'); // Asegúrate de reemplazar 'tu_elem_id' con el ID correcto del elemento que deseas imprimir.
-                })
-                .then(() => location.reload());
-            }}
-          >
+          <Button variant="contained" onClick={handlePrint}>
             Imprimir Lista
           </Button>
           <Autocomplete
@@ -161,11 +87,43 @@ const ListaDeInventario = () => {
           'no hay productos dados de alta en ese lugar'
         ) : (
           <>
-            <div id="printable_div_id">
-              {logo && <Logo />}
-              <h2>{lugar}</h2>
-              <MainTable print inventario rows={rows} columns={columns} />
-            </div>
+            <>
+              <div className="table_container" ref={componentRef} id="printable_div_id">
+                <Logo />
+                <h2>{lugar}</h2>
+                <div className="column_container">
+                  {columns.map((item) => (
+                    <p key={item}>{item}</p>
+                  ))}
+                </div>
+                <div>
+                  {rows.map((item) => {
+                    return (
+                      <div key={item?.id} className="table_row">
+                        <div>
+                          <p>{item?.nombre}</p>
+                        </div>
+                        <div>
+                          <img src={item?.image} alt={item?.name} />
+                        </div>
+                        <div>
+                          <p>{item?.existencia}</p>
+                        </div>
+                        <div>
+                          <p>{item?.marca}</p>
+                        </div>
+                        <div>
+                          <p>{item?.modelo}</p>
+                        </div>
+                        <div>
+                          <p>{item?.presentacion}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
           </>
         )}
       </Box>

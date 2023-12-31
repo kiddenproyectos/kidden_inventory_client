@@ -22,7 +22,7 @@ const Inventario = {
   children: [
     {
       id: 'inventario-item',
-      title: 'Inventario por mes',
+      title: 'Inventario',
       type: 'item',
       url: '/inventario',
       icon: icons.Emoji,

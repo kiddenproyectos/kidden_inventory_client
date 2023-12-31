@@ -77,6 +77,10 @@ export const lugaresDeCompra = [
   },
   {
     id: '20',
+    label: 'Lacer'
+  },
+  {
+    id: '21',
     label: 'Otros'
   }
 ];
