@@ -39,6 +39,7 @@ const useProducts = () => {
   const getAllProducts = useCallback(async () => {
     try {
       const data = await httpGetAllProducts();
+      setLoader(false);
       setAllProducts(data);
     } catch (error) {
       console.error('Error al obtener productos:', error);
@@ -49,7 +50,7 @@ const useProducts = () => {
     async (month) => {
       try {
         const data = await httpGetAllProductsPerMonth(month);
-        setLoader(false);
+        // setLoader(false);
         dispatch(populateReduxProducts(data)); // Actualiza el estado de Redux
       } catch (error) {
         console.error('Error al obtener productos:', error);
@@ -254,10 +255,7 @@ const useProducts = () => {
   }, []);
 
   useEffect(() => {
-    if (month) {
-      getProductsPerMonth(month);
-      getAllProducts();
-    } else if (nombre) {
+    if (nombre) {
       entradasPorProducto(nombre);
       // .then(() => salidasPorProducto(nombre));
       salidasPorProducto(nombre);

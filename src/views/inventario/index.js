@@ -23,6 +23,7 @@ import useProducts from 'hooks/useProducts';
 import { useSelector } from 'react-redux';
 // utils
 import { lugaresDeCompra } from 'utils/productsDataUtils';
+import { fixDateForProductTable } from 'views/utilities/OrganizerDate';
 
 const Users = () => {
   /* eslint-disable */
@@ -40,6 +41,7 @@ const Users = () => {
   } = useProducts();
 
   const { products } = productos;
+
   const selectedRows = useSelector((state) => state.product?.id_rows_array);
   const [tableRows, setTableRows] = useState([]);
   const [searchValue, setSearchValue] = useState('');
@@ -337,6 +339,7 @@ const Users = () => {
         );
       }
     },
+    { field: 'fechaAgregado', headerName: 'Fecha', width: 100 },
     {
       field: 'informacion',
       headerName: 'Info',
@@ -374,7 +377,9 @@ const Users = () => {
     minima: items?.minima?.S,
     caja: items?.caja?.S,
     piezasPorCaja: items?.piezasPorCaja?.S,
-    unidad: items?.unidad?.S
+    fechaAgregado: fixDateForProductTable(items?.fechaAgregado?.S),
+    unidad: items?.unidad?.S,
+    year: items?.year?.S
   }));
 
   const onClickSearchButton = (value) => {

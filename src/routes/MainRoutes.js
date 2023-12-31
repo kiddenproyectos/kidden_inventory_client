@@ -28,7 +28,6 @@ AuthGuard.propTypes = {
 const UsersPage = Loadable(lazy(() => import('views/users')));
 const HomePage = Loadable(lazy(() => import('views/home')));
 const PlaneacionPage = Loadable(lazy(() => import('views/planeacion')));
-const InventarioPageOrganizer = Loadable(lazy(() => import('views/inventario/Organizer')));
 const InventroyYearPage = Loadable(lazy(() => import('views/inventario')));
 const ArticlePage = Loadable(lazy(() => import('views/inventario/EntradasSalidas')));
 const ProductsPage = Loadable(lazy(() => import('views/inventario/Products')));
@@ -62,13 +61,13 @@ const MainRoutes = {
         },
         {
           path: '/inventario',
-          element: <InventarioPageOrganizer />
-        },
-        // Agrega una ruta dinámica para el inventario por año y mes
-        {
-          path: '/inventario/:year/:month',
           element: <InventroyYearPage />
         },
+        // Agrega una ruta dinámica para el inventario por año y mes
+        // {
+        //   path: '/inventario/:year/:month',
+        //   element: <InventroyYearPage />
+        // },
         {
           path: '/articulo/:nombre',
           element: <ArticlePage />
