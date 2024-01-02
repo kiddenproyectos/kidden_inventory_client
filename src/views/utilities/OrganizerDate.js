@@ -84,3 +84,11 @@ export const mesesDelAnio = {
   11: 'Noviembre',
   12: 'Diciembre'
 };
+
+// Función de comparación para ordenar por fecha
+export const compararFechas = (a, b) => {
+  const fechaA = new Date(a?.fechaAgregado?.S);
+  const fechaB = new Date(b?.fechaAgregado?.S);
+
+  return fechaB - fechaA; // Orden descendente (de la más reciente a la más antigua)
+};

@@ -23,7 +23,7 @@ import useProducts from 'hooks/useProducts';
 import { useSelector } from 'react-redux';
 // utils
 import { lugaresDeCompra } from 'utils/productsDataUtils';
-import { fixDateForProductTable } from 'views/utilities/OrganizerDate';
+import { fixDateForProductTable, compararFechas } from 'views/utilities/OrganizerDate';
 
 const Users = () => {
   /* eslint-disable */
@@ -65,6 +65,7 @@ const Users = () => {
   useEffect(() => {
     const mergedRows = [...products, ...allProducts];
     const uniqueRows = removeDuplicates(mergedRows, 'id');
+    uniqueRows.sort(compararFechas);
     setTableRows(uniqueRows);
   }, [products, allProducts]);
 
@@ -384,6 +385,7 @@ const Users = () => {
 
   // --> Extra fucntions for filtereing and searching
   // TODO: add date filter
+
   const onClickSearchButton = (value) => {
     const initialArray = [...tableRows];
     const filteredProducts = initialArray.filter((producto) => {
