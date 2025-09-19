@@ -89,7 +89,7 @@ const Users = () => {
     setInfoProducto(updatedProducts);
   };
 
-  const EditableField = ({ value, field, id, number, lugar }) => {
+  const EditableField = ({ value, field, id, number, lugar, fecha }) => {
     const [showEditButton, setShowEditButton] = useState(false);
     const [editableField, setEditableField] = useState(false);
     const [rowValue, setRowValue] = useState(value);
@@ -160,9 +160,8 @@ const Users = () => {
               <TextField
                 onKeyDown={(e) => onPressEnterEditablefield(e)}
                 name={field}
-                type={number && 'number'}
+                type={(number && 'number') || (fecha && 'date')}
                 onChange={(e) => handleChange(e)}
-                label="Escribe el nuevo nombre"
               />
             )
           ) : (
@@ -340,7 +339,24 @@ const Users = () => {
         );
       }
     },
-    { field: 'fechaAgregado', headerName: 'Fecha', width: 100 },
+    { field: 'fechaAgregado', headerName: 'Fecha', width: 150 },
+    {
+      field: 'fechaCaducidad',
+      headerName: 'Fecha de Caducidad',
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            <EditableField id={params.row.id} field={params.field} value={params.row.fechaCaducidad} fecha />
+          </Stack>
+        );
+      }
+    },
+
     {
       field: 'informacion',
       headerName: 'Info',
@@ -379,6 +395,7 @@ const Users = () => {
     caja: items?.caja?.S,
     piezasPorCaja: items?.piezasPorCaja?.S,
     fechaAgregado: fixDateForProductTable(items?.fechaAgregado?.S),
+    fechaCaducidad: items?.fechaCaducidad?.S || '--',
     unidad: items?.unidad?.S,
     year: items?.year?.S
   }));

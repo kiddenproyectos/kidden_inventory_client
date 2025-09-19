@@ -75,6 +75,7 @@ export const httpPostNewProduct = async (data) => {
   formData.append('caja', data.caja);
   formData.append('piezasPorCaja', data['cantidad-piezas-caja']);
   formData.append('unidad', data.unidad);
+  formData.append('fechaCaducidad', data.fechaCaducidad);
   // Agrega la imagen al FormData
   formData.append('imagen', data.imagen);
 

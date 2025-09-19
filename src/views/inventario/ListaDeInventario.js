@@ -42,7 +42,6 @@ const ListaDeInventario = () => {
     unidad: items?.unidad?.S
   }));
 
-  console.log(rows);
   const componentRef = useRef();
 
   const handlePrint = useReactToPrint({

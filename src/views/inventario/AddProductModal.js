@@ -38,7 +38,8 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
     minima: '',
     caja: showOptionalBox,
     piezasPorCaja: '',
-    unidad: ''
+    unidad: '',
+    fechaCaducidad: ''
   });
 
   const handleChange = (e, setFormData) => {
@@ -261,6 +262,15 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
                 variant="outlined"
               />
             </Stack>
+            <p>Fecha de Caducidad</p>
+            <TextField
+              name="fechaCaducidad"
+              onChange={(e) => handleInputChange(e)}
+              color="secondary"
+              id="outlined-basic"
+              type="date"
+              variant="standard"
+            />
             <p>Sube una foto de el artículo</p>
             <TextField
               name="image"
