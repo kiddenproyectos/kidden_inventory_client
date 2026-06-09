@@ -78,6 +78,7 @@ export const httpPostNewProduct = async (data) => {
   formData.append('fechaCaducidad', data.fechaCaducidad);
   // Agrega la imagen al FormData
   formData.append('imagen', data.imagen);
+  formData.append('temu', data.temu);
 
   const response = await fetch(`${PROD}/inventario/nuevo-producto`, {
     method: 'post',

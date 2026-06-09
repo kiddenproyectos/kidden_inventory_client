@@ -356,7 +356,34 @@ const Users = () => {
         );
       }
     },
-
+    {
+      field: 'temu',
+      headerName: 'Temu',
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <Stack
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            {params.row.temu === 'SI' ? (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>✅ Sí</p>
+              </Stack>
+            ) : params.row.temu === 'NO' ? (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>❌ No</p>
+              </Stack>
+            ) : (
+              <Stack sx={{ fontWeight: '500' }}>
+                <p>--</p>
+              </Stack>
+            )}
+          </Stack>
+        );
+      }
+    },
     {
       field: 'informacion',
       headerName: 'Info',
@@ -397,7 +424,8 @@ const Users = () => {
     fechaAgregado: fixDateForProductTable(items?.fechaAgregado?.S),
     fechaCaducidad: items?.fechaCaducidad?.S || '--',
     unidad: items?.unidad?.S,
-    year: items?.year?.S
+    year: items?.year?.S || '--',
+    temu: items?.temu?.S
   }));
 
   // --> Extra fucntions for filtereing and searching

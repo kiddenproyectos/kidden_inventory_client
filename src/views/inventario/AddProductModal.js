@@ -39,7 +39,8 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
     caja: showOptionalBox,
     piezasPorCaja: '',
     unidad: '',
-    fechaCaducidad: ''
+    fechaCaducidad: '',
+    temu: ''
   });
 
   const handleChange = (e, setFormData) => {
@@ -262,15 +263,28 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
                 variant="outlined"
               />
             </Stack>
-            <p>Fecha de Caducidad</p>
-            <TextField
-              name="fechaCaducidad"
-              onChange={(e) => handleInputChange(e)}
-              color="secondary"
-              id="outlined-basic"
-              type="date"
-              variant="standard"
-            />
+            <Stack spacing={2} direction="row" mt={2}>
+              <Stack sx={{ width: '50%' }}>
+                <FormLabel>Fecha de Caducidad</FormLabel>
+                <TextField
+                  name="fechaCaducidad"
+                  onChange={(e) => handleInputChange(e)}
+                  color="secondary"
+                  id="outlined-basic"
+                  type="date"
+                  variant="standard"
+                />
+              </Stack>
+              <div>
+                <Stack>
+                  <FormLabel>Temu</FormLabel>
+                  <RadioGroup onChange={(e) => handleInputChange(e)} row name="temu">
+                    <FormControlLabel value="SI" control={<Radio />} label="Si" />
+                    <FormControlLabel value="NO" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </Stack>
+              </div>
+            </Stack>
             <p>Sube una foto de el artículo</p>
             <TextField
               name="image"
