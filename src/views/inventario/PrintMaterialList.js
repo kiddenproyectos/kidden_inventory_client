@@ -38,7 +38,7 @@ const PrintMaterialList = () => {
   const rows = filteredProducts.map((items) => ({
     id: items?.id?.S,
     nombre: items?.nombre?.S,
-    image: items?.imagenes.S,
+    image: items?.imagenes?.S,
     presentacion: items?.presentacion?.S,
     marca: items?.marca?.S,
     modelo: items?.modelo?.S,
