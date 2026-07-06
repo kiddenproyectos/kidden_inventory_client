@@ -9,7 +9,8 @@ import useProducts from 'hooks/useProducts';
 import { lugaresDeCompra } from 'utils/productsDataUtils';
 import { useReactToPrint } from 'react-to-print';
 import Logo from 'ui-component/Logo';
-
+// css
+import './table.css';
 const ListaDeInventario = () => {
   const { allProducts } = useProducts();
 
@@ -49,7 +50,7 @@ const ListaDeInventario = () => {
   });
   const filterByPlace = (place) => {
     const productsToFilter = [...selectedProducts];
-    const filtered = productsToFilter.filter((item) => item.lugar.S === place);
+    const filtered = productsToFilter.filter((item) => item?.lugar?.S === place);
     if (filtered.length === 0 && place) {
       setNoProductsMessage(true);
       setFilteredProducts(filtered);
