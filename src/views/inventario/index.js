@@ -5,7 +5,21 @@ import { useNavigate } from 'react-router-dom';
 
 // mui imports
 
-import { TextField, Box, Skeleton, Tooltip, Stack, Button, Autocomplete, Select, MenuItem } from '@mui/material/';
+import {
+  TextField,
+  Box,
+  Skeleton,
+  Tooltip,
+  Stack,
+  Button,
+  Autocomplete,
+  Select,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+} from '@mui/material/';
 // icons
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -24,6 +38,9 @@ import { useSelector } from 'react-redux';
 // utils
 import { lugaresDeCompra } from 'utils/productsDataUtils';
 import { fixDateForProductTable, compararFechas } from 'views/utilities/OrganizerDate';
+
+// TODO: esta muy incomodo el editar mejor que se abra al dar click al cuadrito de la tabla
+// TODO2: la funcion de los colorcitos
 
 const Users = () => {
   /* eslint-disable */
@@ -48,8 +65,56 @@ const Users = () => {
   const [showProductInfoModal, setShowProductInfoModal] = useState(false);
   const [infoProducto, setInfoProducto] = useState({});
   const [idModal, setIdModal] = useState('');
+  const [editModal, setEditModal] = useState({
+    open: false,
+    id: null,
+    field: '',
+    value: ''
+  });
   const navigate = useNavigate();
+  const EditFieldModal = ({ open, id, field, value, onClose, onSave }) => {
+    const [newValue, setNewValue] = useState(value);
 
+    useEffect(() => {
+      setNewValue(value);
+    }, [value]);
+
+    const handleSave = async () => {
+      await onSave(id, {
+        [field]: newValue
+      });
+      window.location.reload();
+    };
+
+    return (
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle>Editar {field}</DialogTitle>
+
+        <DialogContent>
+          <TextField
+            autoFocus
+            fullWidth
+            margin="dense"
+            value={newValue}
+            onChange={(e) => setNewValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSave();
+              }
+            }}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={onClose}>Cancelar</Button>
+
+          <Button variant="contained" onClick={handleSave}>
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
   function removeDuplicates(array, key) {
     const unique = {};
     return array.filter((item) => {
@@ -88,8 +153,24 @@ const Users = () => {
     const updatedProducts = serachObjectInArray(tableRows, id);
     setInfoProducto(updatedProducts);
   };
+  const openEditModal = ({ id, field, value }) => {
+    setEditModal({
+      open: true,
+      id,
+      field,
+      value: value ?? ''
+    });
+  };
+  const closeEditModal = () => {
+    setEditModal({
+      open: false,
+      id: null,
+      field: '',
+      value: ''
+    });
+  };
 
-  const EditableField = ({ value, field, id, number, lugar, fecha, siNo }) => {
+  const EditableField = ({ value, field, id, number, lugar, fecha, siNo, onOpenEditModal }) => {
     const [showEditButton, setShowEditButton] = useState(false);
     const [editableField, setEditableField] = useState(false);
     const [rowValue, setRowValue] = useState(value);
@@ -143,8 +224,22 @@ const Users = () => {
         onMouseEnter={() => setShowEditButton(true)}
         onMouseLeave={() => setShowEditButton(false)}
       >
-        {showEditButton && <EditIcon sx={{ cursor: 'pointer' }} onClick={() => setEditableField(true)} />}
-
+        {showEditButton && (
+          <EditIcon
+            sx={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (siNo || lugar || fecha || number) {
+                setEditableField(true);
+              } else {
+                onOpenEditModal({
+                  id,
+                  field,
+                  value: rowValue
+                });
+              }
+            }}
+          />
+        )}
         <div style={fieldStyle}>
           {editableField ? (
             siNo ? (
@@ -164,8 +259,8 @@ const Users = () => {
               <Autocomplete
                 disablePortal
                 sx={{ width: '200px' }}
-                id="combo-box-demo"
                 options={lugaresDeCompra}
+                value={formData[field] || null}
                 onChange={(e, newValue) => {
                   if (newValue) {
                     guardarCambio(newValue.toUpperCase());
@@ -173,15 +268,21 @@ const Users = () => {
                 }}
                 renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
               />
-            ) : (
+            ) : fecha ? (
               <TextField
                 value={formData[field]}
-                onKeyDown={onPressEnterEditablefield}
                 name={field}
-                type={(number && 'number') || (fecha && 'date')}
-                onChange={handleChange}
+                type="date"
+                onChange={(e) => {
+                  guardarCambio(e.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: true
+                }}
               />
-            )
+            ) : number ? (
+              <TextField value={formData[field]} onKeyDown={onPressEnterEditablefield} name={field} type="number" onChange={handleChange} />
+            ) : null
           ) : siNo ? (
             <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue === 'SI' ? '✅ Sí' : rowValue === 'NO' ? '❌ No' : '--'}</p>
           ) : (
@@ -237,7 +338,8 @@ const Users = () => {
             event.stopPropagation();
           }}
         >
-          <EditableField id={params.row.id} field={params.field} value={params.row.nombre} />
+          <EditableField id={params.row.id} field={params.field} value={params.row.nombre} onOpenEditModal={openEditModal} />
+
           <Tooltip title="Entradas y Salidas" placement="top">
             <OpenInNewIcon onClick={() => navigate(`/articulo/${params.row.nombre}`)} />
           </Tooltip>
@@ -446,7 +548,7 @@ const Users = () => {
     unidad: items?.unidad?.S,
     year: items?.year?.S || '--',
     temu: items?.temu?.S,
-    ArtículosLimpieza: items?.articulosLimpieza?.S
+    articulosLimpieza: items?.articulosLimpieza?.S
   }));
 
   // --> Extra fucntions for filtereing and searching
@@ -523,6 +625,14 @@ const Users = () => {
             infoProducto={infoProducto}
             show={showProductInfoModal}
             close={() => onCloseProductInfoModal()}
+          />
+          <EditFieldModal
+            open={editModal.open}
+            id={editModal.id}
+            field={editModal.field}
+            value={editModal.value}
+            onClose={closeEditModal}
+            onSave={editExistingProductData}
           />
         </>
       )}
