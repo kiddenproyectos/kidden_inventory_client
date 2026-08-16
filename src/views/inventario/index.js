@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 // mui imports
 
-import { TextField, Box, Skeleton, Tooltip, Stack, Button, Autocomplete } from '@mui/material/';
+import { TextField, Box, Skeleton, Tooltip, Stack, Button, Autocomplete, Select, MenuItem } from '@mui/material/';
 // icons
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -89,7 +89,7 @@ const Users = () => {
     setInfoProducto(updatedProducts);
   };
 
-  const EditableField = ({ value, field, id, number, lugar, fecha }) => {
+  const EditableField = ({ value, field, id, number, lugar, fecha, temu }) => {
     const [showEditButton, setShowEditButton] = useState(false);
     const [editableField, setEditableField] = useState(false);
     const [rowValue, setRowValue] = useState(value);
@@ -100,6 +100,7 @@ const Users = () => {
 
     const handleChange = (e) => {
       const { name, value } = e.target;
+
       setFormData((prevData) => ({
         ...prevData,
         [name]: value
@@ -107,20 +108,33 @@ const Users = () => {
     };
 
     const fieldStyle = {
-      wordWrap: 'break-word', // Esta propiedad permite que el texto salte de línea
-      whiteSpace: 'pre-wrap' // Esta propiedad mantiene los saltos de línea en el texto original
+      wordWrap: 'break-word',
+      whiteSpace: 'pre-wrap'
+    };
+
+    const guardarCambio = (newValue) => {
+      const updatedFormData = {
+        ...formData,
+        [field]: newValue
+      };
+
+      setFormData(updatedFormData);
+
+      return editExistingProductData(id, updatedFormData).then(() => {
+        setEditableField(false);
+        setRowValue(newValue);
+      });
     };
     const onPressEnterEditablefield = (event) => {
       if (event.key === 'Enter') {
-        return editExistingProductData(id, formData).then(() => {
-          setEditableField(false);
-          setRowValue(formData[field]);
-        });
+        guardarCambio();
       }
+
       if (event.key === ' ') {
         event.stopPropagation();
       }
     };
+
     return (
       <Stack
         direction="row"
@@ -129,41 +143,47 @@ const Users = () => {
         onMouseEnter={() => setShowEditButton(true)}
         onMouseLeave={() => setShowEditButton(false)}
       >
-        {showEditButton && <EditIcon onClick={() => setEditableField(true)} />}
+        {showEditButton && <EditIcon sx={{ cursor: 'pointer' }} onClick={() => setEditableField(true)} />}
+
         <div style={fieldStyle}>
           {editableField ? (
-            lugar ? (
-              <>
-                <Autocomplete
-                  disablePortal
-                  sx={{ width: '200px' }}
-                  id="combo-box-demo"
-                  options={lugaresDeCompra}
-                  // onChange={(e) => setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() })}
-                  onChange={(e) => {
-                    setFormData({ ...formData, lugar: e.target.outerText.toUpperCase() });
-                    setRowValue(e.target.outerText.toUpperCase());
-                  }}
-                  renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
-                />
-                <Button
-                  onClick={() =>
-                    editExistingProductData(id, formData).then(() => {
-                      setEditableField(false);
-                    })
+            temu ? (
+              <Select
+                size="small"
+                value={formData[field]}
+                name={field}
+                onChange={(e) => {
+                  guardarCambio(e.target.value);
+                }}
+                sx={{ minWidth: '80px' }}
+              >
+                <MenuItem value="SI">SI</MenuItem>
+                <MenuItem value="NO">NO</MenuItem>
+              </Select>
+            ) : lugar ? (
+              <Autocomplete
+                disablePortal
+                sx={{ width: '200px' }}
+                id="combo-box-demo"
+                options={lugaresDeCompra}
+                onChange={(e, newValue) => {
+                  if (newValue) {
+                    guardarCambio(newValue.toUpperCase());
                   }
-                >
-                  Cambiar
-                </Button>
-              </>
+                }}
+                renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
+              />
             ) : (
               <TextField
-                onKeyDown={(e) => onPressEnterEditablefield(e)}
+                value={formData[field]}
+                onKeyDown={onPressEnterEditablefield}
                 name={field}
                 type={(number && 'number') || (fecha && 'date')}
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
               />
             )
+          ) : temu ? (
+            <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue === 'SI' ? '✅ Sí' : rowValue === 'NO' ? '❌ No' : '--'}</p>
           ) : (
             <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue}</p>
           )}
@@ -360,29 +380,15 @@ const Users = () => {
       field: 'temu',
       headerName: 'Temu',
       width: 100,
-      renderCell: (params) => {
-        return (
-          <Stack
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            {params.row.temu === 'SI' ? (
-              <Stack sx={{ fontWeight: '500' }}>
-                <p>✅ Sí</p>
-              </Stack>
-            ) : params.row.temu === 'NO' ? (
-              <Stack sx={{ fontWeight: '500' }}>
-                <p>❌ No</p>
-              </Stack>
-            ) : (
-              <Stack sx={{ fontWeight: '500' }}>
-                <p>--</p>
-              </Stack>
-            )}
-          </Stack>
-        );
-      }
+      renderCell: (params) => (
+        <Stack
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <EditableField id={params.row.id} field={params.field} value={params.row.temu} temu />
+        </Stack>
+      )
     },
     {
       field: 'informacion',
