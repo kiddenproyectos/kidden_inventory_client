@@ -26,7 +26,6 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import InfoIcon from '@mui/icons-material/Info';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import EditIcon from '@mui/icons-material/Edit';
 // project imports
 import MainTable from 'ui-component/tables/MainTable';
 import AddProductModal from './AddProductModal';
@@ -40,7 +39,8 @@ import { lugaresDeCompra } from 'utils/productsDataUtils';
 import { fixDateForProductTable, compararFechas } from 'views/utilities/OrganizerDate';
 
 // TODO: esta muy incomodo el editar mejor que se abra al dar click al cuadrito de la tabla
-// TODO2: la funcion de los colorcitos
+// TODO2: la funcion de los colorcitos de la lsita
+// TODO3: mandar los cambios
 
 const Users = () => {
   /* eslint-disable */
@@ -69,10 +69,11 @@ const Users = () => {
     open: false,
     id: null,
     field: '',
-    value: ''
+    value: '',
+    inputType: 'text'
   });
   const navigate = useNavigate();
-  const EditFieldModal = ({ open, id, field, value, onClose, onSave }) => {
+  const EditFieldModal = ({ open, id, field, value, inputType, onClose, onSave }) => {
     const [newValue, setNewValue] = useState(value);
 
     useEffect(() => {
@@ -91,18 +92,36 @@ const Users = () => {
         <DialogTitle>Editar {field}</DialogTitle>
 
         <DialogContent>
-          <TextField
-            autoFocus
-            fullWidth
-            margin="dense"
-            value={newValue}
-            onChange={(e) => setNewValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSave();
-              }
-            }}
-          />
+          {inputType === 'boolean' ? (
+            <Select fullWidth autoFocus value={newValue} onChange={(e) => setNewValue(e.target.value)}>
+              <MenuItem value="SI">✅ Sí</MenuItem>
+              <MenuItem value="NO">❌ No</MenuItem>
+            </Select>
+          ) : inputType === 'location' ? (
+            <Autocomplete
+              autoFocus
+              options={lugaresDeCompra}
+              getOptionLabel={(option) => option.label || option}
+              value={lugaresDeCompra.find((option) => option.label.toUpperCase() === newValue.toUpperCase()) || null}
+              onChange={(e, option) => setNewValue(option ? option.label.toUpperCase() : '')}
+              renderInput={(params) => <TextField {...params} margin="dense" label="Lugar de compra" />}
+            />
+          ) : (
+            <TextField
+              autoFocus
+              fullWidth
+              margin="dense"
+              type={inputType}
+              value={newValue}
+              onChange={(e) => setNewValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSave();
+                }
+              }}
+              InputLabelProps={inputType === 'date' ? { shrink: true } : undefined}
+            />
+          )}
         </DialogContent>
 
         <DialogActions>
@@ -153,12 +172,13 @@ const Users = () => {
     const updatedProducts = serachObjectInArray(tableRows, id);
     setInfoProducto(updatedProducts);
   };
-  const openEditModal = ({ id, field, value }) => {
+  const openEditModal = ({ id, field, value, number, lugar, fecha, siNo }) => {
     setEditModal({
       open: true,
       id,
       field,
-      value: value ?? ''
+      value: value ?? '',
+      inputType: siNo ? 'boolean' : lugar ? 'location' : fecha ? 'date' : number ? 'number' : 'text'
     });
   };
   const closeEditModal = () => {
@@ -166,54 +186,15 @@ const Users = () => {
       open: false,
       id: null,
       field: '',
-      value: ''
+      value: '',
+      inputType: 'text'
     });
   };
 
-  const EditableField = ({ value, field, id, number, lugar, fecha, siNo, onOpenEditModal }) => {
-    const [showEditButton, setShowEditButton] = useState(false);
-    const [editableField, setEditableField] = useState(false);
-    const [rowValue, setRowValue] = useState(value);
-
-    const [formData, setFormData] = useState({
-      [field]: `${value}`
-    });
-
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value
-      }));
-    };
-
+  const EditableField = ({ value, field, id, number, lugar, fecha, siNo }) => {
     const fieldStyle = {
       wordWrap: 'break-word',
       whiteSpace: 'pre-wrap'
-    };
-
-    const guardarCambio = (newValue) => {
-      const updatedFormData = {
-        ...formData,
-        [field]: newValue
-      };
-
-      setFormData(updatedFormData);
-
-      return editExistingProductData(id, updatedFormData).then(() => {
-        setEditableField(false);
-        setRowValue(newValue);
-      });
-    };
-    const onPressEnterEditablefield = (event) => {
-      if (event.key === 'Enter') {
-        guardarCambio();
-      }
-
-      if (event.key === ' ') {
-        event.stopPropagation();
-      }
     };
 
     return (
@@ -221,72 +202,14 @@ const Users = () => {
         direction="row"
         spacing={2}
         alignItems="center"
-        onMouseEnter={() => setShowEditButton(true)}
-        onMouseLeave={() => setShowEditButton(false)}
+        sx={{ cursor: 'pointer', width: '100%' }}
+        onClick={() => openEditModal({ id, field, value, number, lugar, fecha, siNo })}
       >
-        {showEditButton && (
-          <EditIcon
-            sx={{ cursor: 'pointer' }}
-            onClick={() => {
-              if (siNo || lugar || fecha || number) {
-                setEditableField(true);
-              } else {
-                onOpenEditModal({
-                  id,
-                  field,
-                  value: rowValue
-                });
-              }
-            }}
-          />
-        )}
         <div style={fieldStyle}>
-          {editableField ? (
-            siNo ? (
-              <Select
-                size="small"
-                value={formData[field]}
-                name={field}
-                onChange={(e) => {
-                  guardarCambio(e.target.value);
-                }}
-                sx={{ minWidth: '80px' }}
-              >
-                <MenuItem value="SI">SI</MenuItem>
-                <MenuItem value="NO">NO</MenuItem>
-              </Select>
-            ) : lugar ? (
-              <Autocomplete
-                disablePortal
-                sx={{ width: '200px' }}
-                options={lugaresDeCompra}
-                value={formData[field] || null}
-                onChange={(e, newValue) => {
-                  if (newValue) {
-                    guardarCambio(newValue.toUpperCase());
-                  }
-                }}
-                renderInput={(params) => <TextField {...params} label="Lugar de Compra" />}
-              />
-            ) : fecha ? (
-              <TextField
-                value={formData[field]}
-                name={field}
-                type="date"
-                onChange={(e) => {
-                  guardarCambio(e.target.value);
-                }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-              />
-            ) : number ? (
-              <TextField value={formData[field]} onKeyDown={onPressEnterEditablefield} name={field} type="number" onChange={handleChange} />
-            ) : null
-          ) : siNo ? (
-            <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue === 'SI' ? '✅ Sí' : rowValue === 'NO' ? '❌ No' : '--'}</p>
+          {siNo ? (
+            <p style={{ fontSize: '16px', fontWeight: '500' }}>{value === 'SI' ? '✅ Sí' : value === 'NO' ? '❌ No' : '--'}</p>
           ) : (
-            <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue}</p>
+            <p style={{ fontSize: '16px', fontWeight: '500' }}>{value}</p>
           )}
         </div>
       </Stack>
@@ -338,10 +261,15 @@ const Users = () => {
             event.stopPropagation();
           }}
         >
-          <EditableField id={params.row.id} field={params.field} value={params.row.nombre} onOpenEditModal={openEditModal} />
+          <EditableField id={params.row.id} field={params.field} value={params.row.nombre} />
 
           <Tooltip title="Entradas y Salidas" placement="top">
-            <OpenInNewIcon onClick={() => navigate(`/articulo/${params.row.nombre}`)} />
+            <OpenInNewIcon
+              onClick={(event) => {
+                event.stopPropagation();
+                navigate(`/articulo/${params.row.nombre}`);
+              }}
+            />
           </Tooltip>
         </Stack>
       )
@@ -380,7 +308,7 @@ const Users = () => {
             event.stopPropagation();
           }}
         >
-          <EditableField field={params.field} value={params.row.modelo} />
+          <EditableField id={params.row.id} field={params.field} value={params.row.modelo} />
         </Stack>
       )
     },
@@ -631,6 +559,7 @@ const Users = () => {
             id={editModal.id}
             field={editModal.field}
             value={editModal.value}
+            inputType={editModal.inputType}
             onClose={closeEditModal}
             onSave={editExistingProductData}
           />
