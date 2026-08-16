@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Box, Typography, Button, Stack, TextField } from '@mui/material';
+import { Grid, Box, Typography, Button, Stack, TextField, MenuItem, Select } from '@mui/material';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 /* eslint-disable */
 
@@ -12,10 +12,11 @@ const TableColumn = ({ columnTitle, key, color }) => {
     </div>
   );
 };
-const TableRow = ({ rowText, key, special, editable }) => {
+const TableRow = ({ rowText, key, special, editable, colorOptions }) => {
   const [showIcon, setShowIcon] = useState(false);
   const [editableField, setEditableField] = useState(rowText);
   const [showEditableField, setShowEditableField] = useState(false);
+  const [highlightColor, setHighlightColor] = useState('');
   // Verifica si rowText comienza con las primeras tres letras "NaN"
   if (typeof rowText === 'string' && rowText.startsWith('NaN')) {
     return null; // No muestra nada si comienza con "NaN"
@@ -29,6 +30,44 @@ const TableRow = ({ rowText, key, special, editable }) => {
       setShowEditableField(false);
     }
   };
+  const rowContent = (
+    <>
+      <Typography
+        sx={{
+          display: 'inline',
+          fontSize: `${special ? '16px' : '14px'}`,
+          padding: '8px',
+          fontWeight: `${special && '700'}`,
+          boxShadow: highlightColor ? `inset 0 -7px 0 ${highlightColor}` : 'none'
+        }}
+      >
+        {rowText}
+      </Typography>
+      {colorOptions && (
+        <Select
+          className="planeacion-color-selector"
+          size="small"
+          displayEmpty
+          value={highlightColor}
+          onClick={(event) => event.stopPropagation()}
+          onChange={(event) => setHighlightColor(event.target.value)}
+          renderValue={(selected) =>
+            selected ? <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: selected }} /> : 'Color'
+          }
+          sx={{ minWidth: 76, ml: 1, height: 28 }}
+        >
+          <MenuItem value="">Sin color</MenuItem>
+          {colorOptions.map((color) => (
+            <MenuItem key={color.value} value={color.value}>
+              <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: color.value, mr: 1 }} />
+              {color.label}
+            </MenuItem>
+          ))}
+        </Select>
+      )}
+    </>
+  );
+
   return editable ? (
     <div key={key} onMouseEnter={() => setShowIcon(true)} onMouseLeave={() => setShowIcon(false)}>
       {rowText && (
@@ -72,8 +111,7 @@ const TableRow = ({ rowText, key, special, editable }) => {
     <div key={key}>
       {rowText && (
         <Box sx={{ border: '1px solid black', minHeight: '40px' }}>
-          {/* Mapea cada línea y renderízala en un elemento Typography */}
-          {lines.map((line, index) => (
+          {colorOptions ? rowContent : lines.map((line, index) => (
             <Typography key={index} sx={{ fontSize: `${special ? '16px' : '14px'}`, padding: '2px', fontWeight: `${special && '700'}` }}>
               {line}
             </Typography>
@@ -103,6 +141,13 @@ const PlaneationTable = ({ columns, rows, cubiculo }) => {
     4: 'pink',
     5: 'MediumPurple'
   };
+  const colorOptions = [
+    { label: 'Amarillo', value: colorDeCubiculo[1] },
+    { label: 'Verde', value: colorDeCubiculo[2] },
+    { label: 'Azul', value: colorDeCubiculo[3] },
+    { label: 'Rosa', value: colorDeCubiculo[4] },
+    { label: 'Morado', value: colorDeCubiculo[5] }
+  ];
   return (
     <>
       <Stack direction="row" spacing={2}>
@@ -114,6 +159,7 @@ const PlaneationTable = ({ columns, rows, cubiculo }) => {
         </Button>
       </Stack>
       <div id="printable_div_id">
+        <style>{'@media print { .planeacion-color-selector { display: none !important; } }'}</style>
         <Box sx={{ flexGrow: 1, background: 'white', marginBottom: '8px', marginTop: '16px' }}>
           <Grid container>
             <Grid item xs={12}>
@@ -127,7 +173,7 @@ const PlaneationTable = ({ columns, rows, cubiculo }) => {
             {rows.map((item, i) => (
               <>
                 <Grid key={i} item xs={2}>
-                  <TableRow rowText={item.Fecha} special />
+                  <TableRow rowText={item.Fecha} special colorOptions={colorOptions} />
                 </Grid>
                 <Grid key={i + 1} item xs={2}>
                   <TableRow rowText={item?.Duracion} />
