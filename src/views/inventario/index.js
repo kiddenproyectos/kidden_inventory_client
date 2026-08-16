@@ -89,7 +89,7 @@ const Users = () => {
     setInfoProducto(updatedProducts);
   };
 
-  const EditableField = ({ value, field, id, number, lugar, fecha, temu }) => {
+  const EditableField = ({ value, field, id, number, lugar, fecha, siNo }) => {
     const [showEditButton, setShowEditButton] = useState(false);
     const [editableField, setEditableField] = useState(false);
     const [rowValue, setRowValue] = useState(value);
@@ -147,7 +147,7 @@ const Users = () => {
 
         <div style={fieldStyle}>
           {editableField ? (
-            temu ? (
+            siNo ? (
               <Select
                 size="small"
                 value={formData[field]}
@@ -182,7 +182,7 @@ const Users = () => {
                 onChange={handleChange}
               />
             )
-          ) : temu ? (
+          ) : siNo ? (
             <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue === 'SI' ? '✅ Sí' : rowValue === 'NO' ? '❌ No' : '--'}</p>
           ) : (
             <p style={{ fontSize: '16px', fontWeight: '500' }}>{rowValue}</p>
@@ -386,7 +386,21 @@ const Users = () => {
             event.stopPropagation();
           }}
         >
-          <EditableField id={params.row.id} field={params.field} value={params.row.temu} temu />
+          <EditableField id={params.row.id} field={params.field} value={params.row.temu} siNo />
+        </Stack>
+      )
+    },
+    {
+      field: 'articulosLimpieza',
+      headerName: 'Artículos de Limpieza',
+      width: 160,
+      renderCell: (params) => (
+        <Stack
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <EditableField id={params.row.id} field={params.field} value={params.row.articulosLimpieza} siNo />
         </Stack>
       )
     },
@@ -431,7 +445,8 @@ const Users = () => {
     fechaCaducidad: items?.fechaCaducidad?.S || '--',
     unidad: items?.unidad?.S,
     year: items?.year?.S || '--',
-    temu: items?.temu?.S
+    temu: items?.temu?.S,
+    ArtículosLimpieza: items?.articulosLimpieza?.S
   }));
 
   // --> Extra fucntions for filtereing and searching

@@ -40,7 +40,8 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
     piezasPorCaja: '',
     unidad: '',
     fechaCaducidad: '',
-    temu: ''
+    temu: '',
+    articulosLimpieza: ''
   });
 
   const handleChange = (e, setFormData) => {
@@ -118,7 +119,7 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
         // aria-labelledby="modal-modal-title"
         // aria-describedby="modal-modal-description"
       >
-        <ModalUI title={'Agregar Artículo'} closeModal={closeModal}>
+        <ModalUI closeModal={closeModal}>
           <form onSubmit={(e) => e.preventDefault()}>
             <Stack spacing={2} mt={2}>
               <TextField
@@ -285,15 +286,28 @@ const AddProductModal = ({ addProduct, showModal, closeModal }) => {
                 </Stack>
               </div>
             </Stack>
-            <p>Sube una foto de el artículo</p>
-            <TextField
-              name="image"
-              onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
-              color="secondary"
-              id="outlined-basic"
-              type="file"
-              variant="standard"
-            />
+            <Stack spacing={2} direction="row" mt={2}>
+              <Stack sx={{ width: '50%' }}>
+                <p>FOTO</p>
+                <TextField
+                  name="image"
+                  onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
+                  color="secondary"
+                  id="outlined-basic"
+                  type="file"
+                  variant="standard"
+                />
+              </Stack>
+              <div>
+                <Stack>
+                  <FormLabel>Artículos Limpieza</FormLabel>
+                  <RadioGroup onChange={(e) => handleInputChange(e)} row name="articulosLimpieza">
+                    <FormControlLabel value="SI" control={<Radio />} label="Si" />
+                    <FormControlLabel value="NO" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </Stack>
+              </div>
+            </Stack>
 
             <Stack mt={2}>
               <Button type="submit" onClick={onSubmitModal} size="medium" variant="contained">
