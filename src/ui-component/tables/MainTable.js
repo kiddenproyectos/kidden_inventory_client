@@ -14,8 +14,9 @@ const MainTable = ({ rows, columns, inventario, print }) => {
   }, [rows]);
 
   return (
-    <div style={{ maxHeight: `${!print && '80vh'}`, overflow: 'scroll' }}>
+    <div style={{ height: print ? 'auto' : '80vh', width: '100%' }}>
       <DataGrid
+        autoHeight={print}
         checkboxSelection
         rows={tableRows}
         columns={columns}
@@ -25,16 +26,12 @@ const MainTable = ({ rows, columns, inventario, print }) => {
         sx={{
           boxShadow: 2,
           border: 2,
+          height: print ? 'auto' : '100%',
           background: 'white',
           borderColor: 'primary.light',
 
           '& .MuiDataGrid-columnHeaders': {
-            position: `${print ? 'relative' : 'fixed'}`,
-            zIndex: 1000,
             backgroundColor: 'white'
-          },
-          '& .MuiDataGrid-virtualScroller': {
-            marginTop: `${print ? '0px' : '80px'}`
           },
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent'
